@@ -10,11 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+
       - uses: actions/setup-python@v5
+        if: steps.changes.outputs.backend == 'true'
         with:
           python-version: "3.12"
 
       - name: Install backend deps
+        if: steps.changes.outputs.backend == 'true'
         run: |
           cd backend
           python -m venv .venv
@@ -23,6 +32,7 @@ jobs:
           pip install ruff mypy
 
       - name: Backend lint
+        if: steps.changes.outputs.backend == 'true'
         run: |
           cd backend
           source .venv/bin/activate
@@ -34,22 +44,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+
       - uses: actions/setup-node@v4
+        if: steps.changes.outputs.frontend == 'true'
         with:
           node-version: "20"
 
       - name: Install frontend deps
+        if: steps.changes.outputs.frontend == 'true'
         run: |
           cd frontend
           npm ci
 
       - name: Frontend lint & format
+        if: steps.changes.outputs.frontend == 'true'
         run: |
           cd frontend
           npm run lint
           npm run format -- --check
 
       - name: Frontend type check
+        if: steps.changes.outputs.frontend == 'true'
         run: |
           cd frontend
           npx tsc --noEmit
