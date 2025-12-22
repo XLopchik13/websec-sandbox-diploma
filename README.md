@@ -1,1 +1,1 @@
-# Дипломчик
+# Collection of vulnerable applications
