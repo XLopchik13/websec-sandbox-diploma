@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+
+# Node
+node_modules/
+dist/
+build/
+
+# Editors
+.idea/
+.vscode/
+
+# Logs
+*.log

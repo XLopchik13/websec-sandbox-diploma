@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: backend
+Version: 0.1.0
+Requires-Python: >=3.12
+Requires-Dist: fastapi
+Requires-Dist: uvicorn[standard]
+Requires-Dist: sqlalchemy
+Requires-Dist: alembic
+Requires-Dist: psycopg[binary]
+Requires-Dist: pydantic-settings
