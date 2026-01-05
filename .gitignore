@@ -5,8 +5,12 @@
 __pycache__/
 *.pyc
 .venv/
+*.egg-info/
 .env
 .env.*
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 
 # Node
 node_modules/
