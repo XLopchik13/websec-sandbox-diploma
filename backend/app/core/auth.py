@@ -30,9 +30,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
 def decode_access_token(token: str) -> TokenData:
     try:
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
-        user_id: int | None = payload.get("sub")
+        user_id: str | None = payload.get("sub")
         if user_id is None:
             raise ValueError("Token missing subject")
-        return TokenData(user_id=user_id)
-    except JWTError as e:
+        return TokenData(user_id=int(user_id))
+    except (JWTError, ValueError) as e:
         raise ValueError(f"Invalid token: {e}")

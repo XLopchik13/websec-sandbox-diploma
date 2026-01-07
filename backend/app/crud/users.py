@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import get_password_hash
 from app.models.User import User
 from app.schemas.user import UserCreate, UserUpdate
 
@@ -24,7 +25,7 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     db_user = User(
         email=user.email,
         username=user.username,
-        password_hash=user.password,
+        password_hash=get_password_hash(user.password),
     )
     db.add(db_user)
     await db.commit()
@@ -42,7 +43,7 @@ async def update_user(db: AsyncSession, user_id: int, user: UserUpdate) -> User 
     if user.username is not None:
         db_user.username = user.username
     if user.password is not None:
-        db_user.password_hash = user.password
+        db_user.password_hash = get_password_hash(user.password)
 
     await db.commit()
     await db.refresh(db_user)
