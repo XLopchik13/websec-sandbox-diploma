@@ -25,6 +25,7 @@ async def create_new_user(db: AsyncSession, user_data: UserCreate):
     if existing_user:
         raise UserAlreadyExistsError(f"User with email {user_data.email} already exists")
 
+    user_data.password = get_password_hash(user_data.password)
     return await crud_users.create_user(db, user_data)
 
 

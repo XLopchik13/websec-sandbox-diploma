@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import Token, create_access_token
 from app.core.database import get_db
-from app.core.security import get_password_hash, verify_password
+from app.core.security import verify_password
 from app.crud import users as crud_users
 from app.schemas.auth import LoginRequest, RegisterRequest
 from app.schemas.user import UserCreate, UserRead
@@ -18,7 +18,7 @@ async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db))
         user_data = UserCreate(
             email=request.email,
             username=request.username,
-            password=get_password_hash(request.password),
+            password=request.password,
         )
         return await user_service.create_new_user(db=db, user_data=user_data)
     except user_service.UserAlreadyExistsError as e:
