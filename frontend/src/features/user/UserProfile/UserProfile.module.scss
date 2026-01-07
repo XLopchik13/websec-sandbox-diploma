@@ -1,0 +1,32 @@
+.heading {
+  margin-bottom: 1.5rem;
+}
+
+.infoBox {
+  text-align: left;
+  background: #3a3a3a;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.infoLine {
+  margin: 0.5rem 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.label {
+  color: #fff;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.actionBtn {
+  flex: 1;
+}
