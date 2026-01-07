@@ -8,12 +8,21 @@ dependencies = [
     "sqlalchemy",
     "alembic",
     "asyncpg",
+    "psycopg2-binary",
     "pydantic-settings",
+    "email-validator",
+    "bcrypt",
+    "python-jose[cryptography]",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
+extend-exclude = ["alembic"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routers.auth import auth_router
+from app.routers.users import user_router
+
 app = FastAPI(title="WebSec Sandbox API")
 
 
@@ -19,12 +22,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
+app.include_router(user_router)
+
 
 @app.get("/")
 async def root():
     return {"message": "WebSec Sandbox API is running"}
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
