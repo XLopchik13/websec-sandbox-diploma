@@ -8,9 +8,14 @@ dependencies = [
     "sqlalchemy",
     "alembic",
     "asyncpg",
+    "psycopg2-binary",
     "pydantic-settings",
     "email-validator",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
 
 [tool.ruff]
 target-version = "py312"
