@@ -29,8 +29,3 @@ app.include_router(user_router)
 @app.get("/")
 async def root():
     return {"message": "WebSec Sandbox API is running"}
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
