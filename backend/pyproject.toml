@@ -11,6 +11,8 @@ dependencies = [
     "psycopg2-binary",
     "pydantic-settings",
     "email-validator",
+    "passlib[bcrypt]",
+    "python-jose[cryptography]",
 ]
 
 [tool.setuptools.packages.find]
