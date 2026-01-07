@@ -9,6 +9,7 @@ dependencies = [
     "alembic",
     "asyncpg",
     "pydantic-settings",
+    "email-validator",
 ]
 
 [tool.ruff]
