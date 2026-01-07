@@ -10,4 +10,4 @@ class Settings(BaseSettings):
     secret_key: str = secrets.token_urlsafe(32)
 
 
-settings = Settings()
+settings = Settings()  # type: ignore
