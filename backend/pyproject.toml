@@ -7,7 +7,7 @@ dependencies = [
     "uvicorn[standard]",
     "sqlalchemy",
     "alembic",
-    "psycopg[binary]",
+    "asyncpg",
     "pydantic-settings",
 ]
 
