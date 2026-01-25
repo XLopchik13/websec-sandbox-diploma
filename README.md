@@ -24,7 +24,20 @@ cd frontend
 npm install
 ```
 
+### Configuration
+
+Create `.env` file in `backend/` directory:
+```env
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/dbname
+JWT_SECRET=your-secret-key-here
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=30
+```
+
 ### Database Setup
+
+1. Create PostgreSQL database
+2. Run migrations:
 ```bash
 cd backend
 alembic upgrade head
