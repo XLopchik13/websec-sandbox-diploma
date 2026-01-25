@@ -1,0 +1,37 @@
+.button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background: #646cff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  margin-top: 1rem;
+  font-family: inherit;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #535bf2;
+  }
+
+  &.link {
+    background: none;
+    padding: 0;
+    color: #646cff;
+    text-decoration: underline;
+    margin: 0;
+    font-size: inherit;
+
+    &:hover {
+      background: none;
+      color: #535bf2;
+    }
+  }
+
+  &.danger {
+    background: #ff4444;
+
+    &:hover {
+      background: #cc0000;
+    }
+  }
+}
