@@ -9,11 +9,15 @@ Usage: python s command
 Available commands:
     b, backend      Start backend server
     f, frontend     Start frontend server
+    m, migrate      Run database migrations
+    r, rollback     Rollback database migrations
     --help          Show this help message
 
 Examples:
     python s b      # Start backend
     python s f      # Start frontend
+    python s m      # Run migrations
+    python s r      # Rollback migrations
     """)
 
 
@@ -37,6 +41,22 @@ elif args[0] in ["f", "frontend"]:
         subprocess.run(cmd_str, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error starting frontend: {e}")
+        sys.exit(1)
+
+elif args[0] in ["m", "migrate"]:
+    try:
+        cmd_str = "cd backend && .venv\\Scripts\\alembic upgrade head"
+        subprocess.run(cmd_str, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running migrations: {e}")
+        sys.exit(1)
+
+elif args[0] in ["r", "rollback"]:
+    try:
+        cmd_str = "cd backend && .venv\\Scripts\\alembic downgrade base"
+        subprocess.run(cmd_str, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error rolling back migrations: {e}")
         sys.exit(1)
 
 else:
