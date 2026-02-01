@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "../../../components/ui/Button/Button";
-import { Input } from "../../../components/ui/Input/Input";
+import { Button } from "@/shared/ui/Button/Button";
+import { Input } from "@/shared/ui/Input/Input";
 import styles from "./LoginForm.module.scss";
 
 interface LoginFormProps {

@@ -1,5 +1,10 @@
 # Collection of vulnerable applications
 
+### Требования
+- Python 3.12+
+- Node.js 18+
+- PostgreSQL
+
 ## Установка зависимостей
 
 ### Backend (Python)

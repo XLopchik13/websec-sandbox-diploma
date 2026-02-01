@@ -1,4 +1,4 @@
-import { Button } from "../../../components/ui/Button/Button";
+import { Button } from "@/shared/ui/Button/Button";
 import styles from "./UserProfile.module.scss";
 
 interface User {
