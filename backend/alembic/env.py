@@ -6,6 +6,7 @@ from alembic import context
 from app.core.config import settings
 from app.core.database import Base
 from app.models.User import User  # noqa: F401
+from app.models.UserProgress import UserProgress  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
