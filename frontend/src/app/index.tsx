@@ -1,10 +1,9 @@
 import { useAuth } from "@/entities/user/model";
 import { AuthPage } from "@/pages/AuthPage/AuthPage";
-import { ProfilePage } from "@/pages/ProfilePage/ProfilePage";
+import { SandboxPage } from "@/pages/SandboxPage/SandboxPage";
 
 export function App() {
-  const { user, loading, error, login, register, logout, deleteAccount } =
-    useAuth();
+  const { user, loading, error, login, register } = useAuth();
 
   const handleRegister = async (
     email: string,
@@ -18,14 +17,7 @@ export function App() {
   };
 
   if (user) {
-    return (
-      <ProfilePage
-        user={user}
-        onLogout={logout}
-        onDeleteAccount={deleteAccount}
-        error={error}
-      />
-    );
+    return <SandboxPage />;
   }
 
   return (

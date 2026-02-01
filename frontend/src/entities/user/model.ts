@@ -23,8 +23,11 @@ export function useAuth() {
     try {
       const data = await userApi.getProfile(token);
       setUser(data);
-    } catch {
-      logout();
+    } catch (err) {
+      if (err instanceof Error && err.message.includes("401")) {
+        logout();
+      }
+      console.error("Profile fetch failed:", err);
     } finally {
       setLoading(false);
     }
@@ -44,7 +47,11 @@ export function useAuth() {
     }
   };
 
-  const register = async (email: string, username: string, password: string) => {
+  const register = async (
+    email: string,
+    username: string,
+    password: string,
+  ) => {
     setError(null);
     setLoading(true);
     try {
