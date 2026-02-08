@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { userApi } from "./api";
 import type { User } from "./types";
 
@@ -10,13 +10,14 @@ export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (token) {
-      fetchProfile();
-    }
-  }, [token]);
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    setError(null);
+  }, []);
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -31,7 +32,13 @@ export function useAuth() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, logout]);
+
+  useEffect(() => {
+    if (token) {
+      fetchProfile();
+    }
+  }, [token, fetchProfile]);
 
   const login = async (email: string, password: string) => {
     setError(null);
@@ -77,13 +84,6 @@ export function useAuth() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-    setError(null);
   };
 
   return {
