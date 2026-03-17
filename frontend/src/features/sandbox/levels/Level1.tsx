@@ -3,6 +3,12 @@ import { Button } from "@/shared/ui/Button/Button";
 import { Input } from "@/shared/ui/Input/Input";
 import { sandboxApi } from "@/entities/sandbox/api";
 
+declare global {
+  interface Window {
+    levelSuccess: () => void;
+  }
+}
+
 interface LevelProps {
   onSuccess: () => void;
 }
@@ -20,6 +26,13 @@ export function Level1({ onSuccess }: LevelProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    window.levelSuccess = onSuccess;
+    return () => {
+      delete (window as Partial<Window>).levelSuccess;
+    };
+  }, [onSuccess]);
 
   const loadComments = useCallback(async () => {
     if (!token) return;
@@ -46,11 +59,6 @@ export function Level1({ onSuccess }: LevelProps) {
       await sandboxApi.createComment(token, "1", comment);
       setComment("");
       await loadComments();
-
-      // Проверяем, есть ли XSS в комментарии
-      if (comment.includes("<script>")) {
-        onSuccess();
-      }
     } catch (err) {
       console.error("Failed to create comment:", err);
     } finally {
@@ -62,8 +70,12 @@ export function Level1({ onSuccess }: LevelProps) {
     <div>
       <h3>Уровень 1: Хранимая XSS</h3>
       <p>
-        Попробуйте выполнить скрипт в поле комментария. Комментарии сохраняются
-        на сервере и отображаются всем пользователям.
+        Выполните произвольный JavaScript через поле комментария. Комментарии
+        сохраняются на сервере и отображаются всем пользователям без фильтрации.
+      </p>
+      <p>
+        Подсказка: используйте HTML-атрибуты событий, например{" "}
+        <code>{'<img src=x onerror="levelSuccess()">'}</code>
       </p>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>

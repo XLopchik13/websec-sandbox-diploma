@@ -35,6 +35,14 @@ export const sandboxApi = {
       },
     );
   },
+  deleteComments: async (token: string, levelId: string) => {
+    return apiClient.delete<{ message: string }>(
+      `/sandbox/levels/${levelId}/comments`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+  },
   getComments: async (token: string, levelId: string) => {
     return apiClient.get<
       Array<{

@@ -81,3 +81,15 @@ async def get_comments(
     query = select(Comment).where(Comment.level_id == level_id).order_by(Comment.created_at.desc())
     result = await db.execute(query)
     return result.scalars().all()
+
+
+@router.delete("/levels/{level_id}/comments")
+async def delete_comments(
+    level_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    query = delete(Comment).where(Comment.level_id == level_id)
+    await db.execute(query)
+    await db.commit()
+    return {"message": "Comments cleared"}
