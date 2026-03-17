@@ -6,8 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
+from app.models.Comment import Comment
 from app.models.User import User
 from app.models.UserProgress import UserProgress
+from app.schemas.comment import CommentCreate, CommentRead
 
 router = APIRouter(prefix="/sandbox", tags=["sandbox"])
 
@@ -50,3 +52,32 @@ async def reset_progress(
     await db.execute(query)
     await db.commit()
     return {"message": "Progress reset"}
+
+
+@router.post("/levels/{level_id}/comments", response_model=CommentRead)
+async def create_comment(
+    level_id: str,
+    comment_data: CommentCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    new_comment = Comment(
+        user_id=current_user.id,
+        level_id=level_id,
+        content=comment_data.content,
+    )
+    db.add(new_comment)
+    await db.commit()
+    await db.refresh(new_comment)
+    return new_comment
+
+
+@router.get("/levels/{level_id}/comments", response_model=List[CommentRead])
+async def get_comments(
+    level_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    query = select(Comment).where(Comment.level_id == level_id).order_by(Comment.created_at.desc())
+    result = await db.execute(query)
+    return result.scalars().all()

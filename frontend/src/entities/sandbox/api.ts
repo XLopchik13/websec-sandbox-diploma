@@ -20,4 +20,32 @@ export const sandboxApi = {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
+  createComment: async (token: string, levelId: string, content: string) => {
+    return apiClient.post<{
+      id: number;
+      user_id: number;
+      level_id: string;
+      content: string;
+      created_at: string;
+    }>(
+      `/sandbox/levels/${levelId}/comments`,
+      { content },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+  },
+  getComments: async (token: string, levelId: string) => {
+    return apiClient.get<
+      Array<{
+        id: number;
+        user_id: number;
+        level_id: string;
+        content: string;
+        created_at: string;
+      }>
+    >(`/sandbox/levels/${levelId}/comments`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
 };
