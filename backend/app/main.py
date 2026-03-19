@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.auth import auth_router
+from app.routers.levels import router as levels_router
 from app.routers.sandbox import router as sandbox_router
 from app.routers.users import user_router
 
@@ -26,6 +27,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(sandbox_router)
+app.include_router(levels_router)
 
 
 @app.get("/")
