@@ -23,3 +23,8 @@ build/
 
 # Logs
 *.log
+
+.claude/
+graphify-out/
+.graphify_python
+CLAUDE.md
