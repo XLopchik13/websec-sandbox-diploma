@@ -56,4 +56,17 @@ export const sandboxApi = {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
+  sqliSearch: async (token: string, username: string) => {
+    return apiClient.get<Array<{ id: number; username: string; role: string }>>(
+      `/sandbox/levels/2/search?username=${encodeURIComponent(username)}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+  sqliReset: async (token: string) => {
+    return apiClient.post<{ message: string }>(
+      "/sandbox/levels/2/reset",
+      {},
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
 };
