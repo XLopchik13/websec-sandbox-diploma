@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import get_password_hash
 from app.crud import users as crud_users
 from app.schemas.user import UserCreate, UserUpdate
 
@@ -24,7 +25,8 @@ async def create_new_user(db: AsyncSession, user_data: UserCreate):
     if existing_user:
         raise UserAlreadyExistsError(f"User with email {user_data.email} already exists")
 
-    return await crud_users.create_user(db, user_data)
+    hashed_password = get_password_hash(user_data.password)
+    return await crud_users.create_user(db, user_data, hashed_password)
 
 
 async def update_user_profile(db: AsyncSession, user_id: int, user_data: UserUpdate):
@@ -33,7 +35,8 @@ async def update_user_profile(db: AsyncSession, user_id: int, user_data: UserUpd
         if existing_user and existing_user.id != user_id:
             raise UserAlreadyExistsError(f"User with email {user_data.email} already exists")
 
-    updated_user = await crud_users.update_user(db, user_id, user_data)
+    hashed_password = get_password_hash(user_data.password) if user_data.password else None
+    updated_user = await crud_users.update_user(db, user_id, user_data, hashed_password)
     if not updated_user:
         raise UserNotFoundError(f"User with id {user_id} not found")
     return updated_user

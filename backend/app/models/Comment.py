@@ -14,5 +14,5 @@ class Comment(Base):
     level_id: Mapped[str] = mapped_column(String(50), nullable=False)
     content: Mapped[str] = mapped_column(String(2000), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

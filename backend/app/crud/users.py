@@ -1,7 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.security import get_password_hash
 from app.models.User import User
 from app.schemas.user import UserCreate, UserUpdate
 
@@ -21,11 +20,11 @@ async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[U
     return list(result.scalars().all())
 
 
-async def create_user(db: AsyncSession, user: UserCreate) -> User:
+async def create_user(db: AsyncSession, user: UserCreate, hashed_password: str) -> User:
     db_user = User(
         email=user.email,
         username=user.username,
-        password_hash=get_password_hash(user.password),
+        password_hash=hashed_password,
     )
     db.add(db_user)
     await db.commit()
@@ -33,7 +32,12 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     return db_user
 
 
-async def update_user(db: AsyncSession, user_id: int, user: UserUpdate) -> User | None:
+async def update_user(
+    db: AsyncSession,
+    user_id: int,
+    user: UserUpdate,
+    hashed_password: str | None = None,
+) -> User | None:
     db_user = await get_user(db, user_id)
     if not db_user:
         return None
@@ -42,8 +46,8 @@ async def update_user(db: AsyncSession, user_id: int, user: UserUpdate) -> User 
         db_user.email = user.email
     if user.username is not None:
         db_user.username = user.username
-    if user.password is not None:
-        db_user.password_hash = get_password_hash(user.password)
+    if hashed_password is not None:
+        db_user.password_hash = hashed_password
 
     await db.commit()
     await db.refresh(db_user)
