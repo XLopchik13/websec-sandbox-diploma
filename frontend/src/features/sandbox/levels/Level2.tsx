@@ -12,9 +12,9 @@ interface Account {
 }
 
 const ROLE_BADGE: Record<string, { bg: string; color: string }> = {
-  admin: { bg: "#3d0000", color: "#fc8181" },
-  moderator: { bg: "#3d2800", color: "#f6ad55" },
-  user: { bg: "#1a2d4a", color: "#63b3ed" },
+  admin: { bg: "#fee2e2", color: "#dc2626" },
+  moderator: { bg: "#fef3c7", color: "#d97706" },
+  user: { bg: "#dbeafe", color: "#2563eb" },
 };
 
 export function Level2({ onSuccess }: LevelProps) {
@@ -66,222 +66,314 @@ export function Level2({ onSuccess }: LevelProps) {
         Подсказка: <code>{"' OR role='admin' --"}</code>
       </p>
 
-      <div
-        style={{
-          background: "#0f172a",
-          borderRadius: "12px",
-          overflow: "hidden",
-          border: "1px solid #1e293b",
-        }}
-      >
+      <div style={{ marginBottom: "20px" }}>
         <div
           style={{
-            background: "#1e293b",
-            padding: "14px 20px",
+            background: "#2b2b2b",
+            borderRadius: "10px 10px 0 0",
+            padding: "10px 14px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            borderBottom: "1px solid #334155",
+            gap: "10px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: "#22c55e",
-              }}
-            />
-            <span
-              style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "600" }}
-            >
-              HR Admin Panel — Employee Database
+          <div style={{ display: "flex", gap: "6px" }}>
+            {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
+              <div
+                key={c}
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "50%",
+                  background: c,
+                }}
+              />
+            ))}
+          </div>
+          <div
+            style={{
+              flex: 1,
+              background: "#3c3c3c",
+              borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              padding: "4px 10px",
+              gap: "6px",
+            }}
+          >
+            <span style={{ color: "#888", fontSize: "13px" }}>🔒</span>
+            <span style={{ color: "#ccc", fontSize: "13px" }}>
+              hr.corp-internal.io/employees/search
             </span>
           </div>
-          <span style={{ color: "#475569", fontSize: "12px" }}>
-            v2.4.1 · Internal
-          </span>
         </div>
 
-        <div style={{ padding: "20px 24px" }}>
-          <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
+        <div
+          style={{
+            background: "#f8fafc",
+            borderRadius: "0 0 10px 10px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              background: "#1e293b",
+              padding: "0 24px",
+              display: "flex",
+              alignItems: "center",
+              gap: "24px",
+              borderBottom: "1px solid #334155",
+            }}
+          >
+            {["Главная", "Сотрудники", "Отделы", "Отчёты"].map((item, i) => (
+              <div
+                key={item}
+                style={{
+                  padding: "14px 0",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: i === 1 ? "#38bdf8" : "#94a3b8",
+                  borderBottom:
+                    i === 1 ? "2px solid #38bdf8" : "2px solid transparent",
+                  cursor: "default",
+                  userSelect: "none",
+                }}
+              >
+                {item}
+              </div>
+            ))}
+            <div
+              style={{ marginLeft: "auto", color: "#475569", fontSize: "12px" }}
+            >
+              HR Portal v2.4.1
+            </div>
+          </div>
+
+          <div style={{ padding: "24px" }}>
             <div
               style={{
                 display: "flex",
-                gap: "8px",
-                background: "#1e293b",
-                border: "1px solid #334155",
-                borderRadius: "8px",
-                padding: "6px 12px",
+                justifyContent: "space-between",
                 alignItems: "center",
+                marginBottom: "20px",
               }}
             >
-              <span style={{ color: "#475569", fontSize: "16px" }}>🔍</span>
-              <input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Поиск по имени сотрудника..."
-                disabled={loading}
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: "#e2e8f0",
-                  fontSize: "14px",
-                  padding: "4px 0",
-                }}
-              />
-              <button
-                type="submit"
-                disabled={loading || !username.trim()}
-                style={{
-                  background: "#3b82f6",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "6px 16px",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  cursor: loading ? "default" : "pointer",
-                  opacity: !username.trim() ? 0.5 : 1,
-                }}
-              >
-                {loading ? "..." : "Найти"}
-              </button>
+              <div>
+                <div
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "700",
+                    color: "#0f172a",
+                  }}
+                >
+                  База сотрудников
+                </div>
+                <div
+                  style={{
+                    fontSize: "13px",
+                    color: "#64748b",
+                    marginTop: "2px",
+                  }}
+                >
+                  Поиск по имени пользователя
+                </div>
+              </div>
             </div>
-          </form>
 
-          {searched && (
-            <div>
+            <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  gap: "8px",
+                  background: "#fff",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "8px",
+                  padding: "6px 12px",
                   alignItems: "center",
-                  marginBottom: "12px",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
                 }}
               >
-                <span style={{ color: "#64748b", fontSize: "12px" }}>
-                  Найдено записей: {results.length}
-                </span>
-                <button
-                  onClick={handleReset}
-                  disabled={resetLoading}
+                <span style={{ color: "#94a3b8", fontSize: "16px" }}>🔍</span>
+                <input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Поиск по имени сотрудника..."
+                  disabled={loading}
                   style={{
+                    flex: 1,
                     background: "transparent",
-                    border: "1px solid #4a3030",
-                    color: "#fc8181",
-                    borderRadius: "5px",
-                    padding: "3px 10px",
-                    fontSize: "12px",
-                    cursor: "pointer",
+                    border: "none",
+                    outline: "none",
+                    color: "#0f172a",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !username.trim()}
+                  style={{
+                    background: "#2563eb",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "6px 18px",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    cursor: !username.trim() || loading ? "default" : "pointer",
+                    opacity: !username.trim() ? 0.5 : 1,
                   }}
                 >
-                  {resetLoading ? "..." : "Сбросить данные"}
+                  {loading ? "..." : "Найти"}
                 </button>
               </div>
+            </form>
 
-              {results.length === 0 ? (
+            {searched && (
+              <div
+                style={{
+                  background: "#fff",
+                  borderRadius: "8px",
+                  border: "1px solid #e2e8f0",
+                  overflow: "hidden",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                }}
+              >
                 <div
                   style={{
-                    color: "#475569",
-                    textAlign: "center",
-                    padding: "32px 0",
-                    fontSize: "14px",
+                    padding: "12px 16px",
+                    borderBottom: "1px solid #f1f5f9",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    background: "#f8fafc",
                   }}
                 >
-                  Сотрудники не найдены
+                  <span style={{ color: "#64748b", fontSize: "13px" }}>
+                    Найдено: {results.length}
+                  </span>
+                  <button
+                    onClick={handleReset}
+                    disabled={resetLoading}
+                    style={{
+                      background: "transparent",
+                      border: "1px solid #fecaca",
+                      color: "#dc2626",
+                      borderRadius: "5px",
+                      padding: "3px 10px",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {resetLoading ? "..." : "Сбросить данные"}
+                  </button>
                 </div>
-              ) : (
-                <table
-                  style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    fontSize: "13px",
-                  }}
-                >
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid #1e293b" }}>
-                      {["ID", "Имя пользователя", "Роль"].map((h) => (
-                        <th
-                          key={h}
-                          style={{
-                            textAlign: "left",
-                            padding: "8px 12px",
-                            color: "#475569",
-                            fontWeight: "600",
-                            textTransform: "uppercase",
-                            fontSize: "11px",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {results.map((r) => {
-                      const badge = ROLE_BADGE[r.role] ?? ROLE_BADGE.user;
-                      return (
-                        <tr
-                          key={r.id}
-                          style={{
-                            borderBottom: "1px solid #1e293b",
-                            background:
-                              r.role === "admin"
-                                ? "rgba(220,53,69,0.07)"
-                                : "transparent",
-                          }}
-                        >
-                          <td
-                            style={{ padding: "10px 12px", color: "#475569" }}
+
+                {results.length === 0 ? (
+                  <div
+                    style={{
+                      color: "#94a3b8",
+                      textAlign: "center",
+                      padding: "40px 0",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Сотрудники не найдены
+                  </div>
+                ) : (
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      fontSize: "13px",
+                    }}
+                  >
+                    <thead>
+                      <tr style={{ background: "#f8fafc" }}>
+                        {["ID", "Имя пользователя", "Роль"].map((h) => (
+                          <th
+                            key={h}
+                            style={{
+                              textAlign: "left",
+                              padding: "10px 16px",
+                              color: "#64748b",
+                              fontWeight: "600",
+                              textTransform: "uppercase",
+                              fontSize: "11px",
+                              letterSpacing: "0.5px",
+                              borderBottom: "1px solid #e2e8f0",
+                            }}
                           >
-                            {r.id}
-                          </td>
-                          <td
-                            style={{ padding: "10px 12px", color: "#e2e8f0" }}
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.map((r) => {
+                        const badge = ROLE_BADGE[r.role] ?? ROLE_BADGE.user;
+                        return (
+                          <tr
+                            key={r.id}
+                            style={{
+                              borderBottom: "1px solid #f1f5f9",
+                              background:
+                                r.role === "admin"
+                                  ? "rgba(254,226,226,0.4)"
+                                  : "transparent",
+                            }}
                           >
-                            {r.username}
-                          </td>
-                          <td style={{ padding: "10px 12px" }}>
-                            <span
+                            <td
+                              style={{ padding: "12px 16px", color: "#94a3b8" }}
+                            >
+                              {r.id}
+                            </td>
+                            <td
                               style={{
-                                background: badge.bg,
-                                color: badge.color,
-                                padding: "2px 8px",
-                                borderRadius: "4px",
-                                fontSize: "11px",
-                                fontWeight: "600",
-                                textTransform: "uppercase",
+                                padding: "12px 16px",
+                                color: "#0f172a",
+                                fontWeight: "500",
                               }}
                             >
-                              {r.role}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
+                              {r.username}
+                            </td>
+                            <td style={{ padding: "12px 16px" }}>
+                              <span
+                                style={{
+                                  background: badge.bg,
+                                  color: badge.color,
+                                  padding: "2px 8px",
+                                  borderRadius: "4px",
+                                  fontSize: "11px",
+                                  fontWeight: "600",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                {r.role}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
 
-          {!searched && (
-            <div
-              style={{
-                color: "#334155",
-                textAlign: "center",
-                padding: "32px 0",
-                fontSize: "13px",
-              }}
-            >
-              Введите имя для поиска по базе сотрудников
-            </div>
-          )}
+            {!searched && (
+              <div
+                style={{
+                  color: "#cbd5e1",
+                  textAlign: "center",
+                  padding: "40px 0",
+                  fontSize: "13px",
+                }}
+              >
+                Введите имя для поиска по базе сотрудников
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
