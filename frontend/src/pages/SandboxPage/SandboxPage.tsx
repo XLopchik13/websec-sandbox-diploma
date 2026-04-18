@@ -46,7 +46,7 @@ export function SandboxPage() {
   if (selectedLevel) {
     const LevelComponent = selectedLevel.component;
     return (
-      <LauncherWindow title={selectedLevel.title}>
+      <LauncherWindow title={selectedLevel.title} wide>
         <Button
           variant="link"
           onClick={() => setSelectedLevelId(null)}
@@ -62,7 +62,7 @@ export function SandboxPage() {
   }
 
   return (
-    <LauncherWindow title="Песочницы">
+    <LauncherWindow title="Песочницы" wide>
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <div
           style={{

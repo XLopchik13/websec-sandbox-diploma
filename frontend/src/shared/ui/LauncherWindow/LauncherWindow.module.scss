@@ -9,6 +9,10 @@
   gap: 1rem;
 }
 
+.wide {
+  width: min(800px, 90vw);
+}
+
 .title {
   margin-bottom: 1.5rem;
   font-size: 1.5rem;

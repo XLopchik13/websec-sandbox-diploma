@@ -1,9 +1,9 @@
-from sqlalchemy import delete, select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.IdorProfile import IdorProfile
 
-_SEED_PROFILES = [
+_SEED = [
     IdorProfile(
         username="john_doe",
         email="john@example.com",
@@ -42,26 +42,40 @@ _SEED_PROFILES = [
 ]
 
 
+def _make_profiles() -> list[IdorProfile]:
+    return [
+        IdorProfile(
+            username=p.username,
+            email=p.email,
+            phone=p.phone,
+            role=p.role,
+            secret_note=p.secret_note,
+        )
+        for p in _SEED
+    ]
+
+
+async def _truncate_and_seed(db: AsyncSession) -> None:
+    await db.execute(text("TRUNCATE TABLE idor_profiles RESTART IDENTITY"))
+    db.add_all(_make_profiles())
+    await db.commit()
+
+
+async def ensure_seeded(db: AsyncSession) -> None:
+    result = await db.execute(select(IdorProfile))
+    if not result.scalars().first():
+        await _truncate_and_seed(db)
+
+
 async def get_profile(db: AsyncSession, profile_id: int) -> IdorProfile | None:
     result = await db.execute(select(IdorProfile).where(IdorProfile.id == profile_id))
     return result.scalar_one_or_none()
 
 
-async def reset_profiles(db: AsyncSession) -> None:
-    await db.execute(delete(IdorProfile))
-    for profile in _SEED_PROFILES:
-        db.add(
-            IdorProfile(
-                username=profile.username,
-                email=profile.email,
-                phone=profile.phone,
-                role=profile.role,
-                secret_note=profile.secret_note,
-            )
-        )
-    await db.commit()
-
-
-async def get_my_profile(db: AsyncSession) -> IdorProfile | None:
-    result = await db.execute(select(IdorProfile).where(IdorProfile.username == "john_doe"))
+async def get_profile_by_username(db: AsyncSession, username: str) -> IdorProfile | None:
+    result = await db.execute(select(IdorProfile).where(IdorProfile.username == username))
     return result.scalar_one_or_none()
+
+
+async def reset_profiles(db: AsyncSession) -> None:
+    await _truncate_and_seed(db)
