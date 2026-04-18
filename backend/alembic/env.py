@@ -9,6 +9,7 @@ from app.models.User import User  # noqa: F401
 from app.models.UserProgress import UserProgress  # noqa: F401
 from app.models.Comment import Comment  # noqa: F401
 from app.models.SqliAccount import SqliAccount  # noqa: F401
+from app.models.IdorProfile import IdorProfile  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
