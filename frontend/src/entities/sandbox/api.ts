@@ -69,4 +69,35 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  idorMyProfile: async (token: string) => {
+    return apiClient.get<{
+      id: number;
+      username: string;
+      email: string;
+      phone: string;
+      role: string;
+      secret_note: string;
+    }>("/sandbox/levels/3/my-profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  idorGetProfile: async (token: string, profileId: number) => {
+    return apiClient.get<{
+      id: number;
+      username: string;
+      email: string;
+      phone: string;
+      role: string;
+      secret_note: string;
+    }>(`/sandbox/levels/3/profile/${profileId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  idorReset: async (token: string) => {
+    return apiClient.post<{ message: string }>(
+      "/sandbox/levels/3/reset",
+      {},
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
 };

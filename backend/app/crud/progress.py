@@ -5,9 +5,7 @@ from app.models.UserProgress import UserProgress
 
 
 async def get_completed_levels(db: AsyncSession, user_id: int) -> list[str]:
-    result = await db.execute(
-        select(UserProgress.level_id).where(UserProgress.user_id == user_id)
-    )
+    result = await db.execute(select(UserProgress.level_id).where(UserProgress.user_id == user_id))
     return [row[0] for row in result.all()]
 
 
