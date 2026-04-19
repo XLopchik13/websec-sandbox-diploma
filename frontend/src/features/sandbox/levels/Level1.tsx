@@ -86,7 +86,7 @@ export function Level1({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 1: Хранимая XSS</h3>
+      <h3>Уровень 1: Stored XSS</h3>
       <p>
         Комментарии сохраняются на сервере и отображаются всем пользователям без
         фильтрации. Выполните произвольный JavaScript.

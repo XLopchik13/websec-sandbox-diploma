@@ -100,4 +100,21 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  jwtGetToken: async (token: string) => {
+    return apiClient.get<{ token: string }>("/sandbox/levels/4/token", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  jwtVerify: async (token: string, sandboxToken: string) => {
+    return apiClient.post<{
+      access: string;
+      role: string;
+      message: string;
+      secret: string;
+    }>(
+      "/sandbox/levels/4/verify",
+      { token: sandboxToken },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
 };
