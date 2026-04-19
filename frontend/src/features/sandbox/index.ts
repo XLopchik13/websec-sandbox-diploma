@@ -2,6 +2,7 @@ import { Level1 } from "./levels/Level1";
 import { Level2 } from "./levels/Level2";
 import { Level3 } from "./levels/Level3";
 import { Level4 } from "./levels/Level4";
+import { Level5 } from "./levels/Level5";
 import type { SandboxLevel } from "@/entities/sandbox/types";
 
 export const SANDBOX_LEVELS: SandboxLevel[] = [
@@ -29,5 +30,12 @@ export const SANDBOX_LEVELS: SandboxLevel[] = [
     description:
       "Подмените алгоритм подписи токена и получите права администратора",
     component: Level4,
+  },
+  {
+    id: "5",
+    title: "Уровень 5: SSRF",
+    description:
+      "Заставьте сервер обратиться к внутренней инфраструктуре и получите секретные данные",
+    component: Level5,
   },
 ];

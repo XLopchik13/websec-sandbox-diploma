@@ -13,6 +13,7 @@ dependencies = [
     "email-validator",
     "bcrypt",
     "python-jose[cryptography]",
+    "httpx",
 ]
 
 [tool.setuptools.packages.find]

@@ -117,4 +117,15 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  ssrfFetch: async (token: string, url: string) => {
+    return apiClient.post<{
+      status: number;
+      content: string;
+      secret: string | null;
+    }>(
+      "/sandbox/levels/5/fetch",
+      { url },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
 };
