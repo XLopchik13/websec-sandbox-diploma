@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +19,7 @@ async def create_comment(
     return await crud_xss.create_comment(db, current_user.id, "1", comment_data.content)
 
 
-@router.get("/levels/1/comments", response_model=List[CommentRead])
+@router.get("/levels/1/comments", response_model=list[CommentRead])
 async def get_comments(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -29,10 +27,9 @@ async def get_comments(
     return await crud_xss.get_comments(db, "1")
 
 
-@router.delete("/levels/1/comments")
+@router.delete("/levels/1/comments", status_code=204)
 async def delete_comments(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     await crud_xss.delete_comments(db, "1")
-    return {"message": "Comments cleared"}

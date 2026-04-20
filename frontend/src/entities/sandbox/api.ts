@@ -1,22 +1,30 @@
 import { apiClient } from "@/shared/api/client";
 
+import type { LevelMeta } from "./types";
+
 export const sandboxApi = {
-  getProgress: async (token: string) => {
-    return apiClient.get<string[]>("/sandbox/progress", {
+  getLevels: async (token: string) => {
+    return apiClient.get<LevelMeta[]>("/sandbox/levels", {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
-  completeLevel: async (token: string, levelId: string) => {
-    return apiClient.post<{ message: string }>(
-      `/sandbox/progress/${levelId}`,
-      {},
+  getProgress: async (token: string) => {
+    return apiClient.get<{ completed: string[]; total: number }>(
+      "/sandbox/progress",
       {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
   },
+  completeLevel: async (token: string, levelId: string) => {
+    return apiClient.post<{ completed: string[]; total: number }>(
+      `/sandbox/progress/${levelId}`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
   resetProgress: async (token: string) => {
-    return apiClient.delete<{ message: string }>("/sandbox/progress", {
+    return apiClient.delete<void>("/sandbox/progress", {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
