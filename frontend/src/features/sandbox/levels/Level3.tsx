@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/shared/ui/Button/Button";
+import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
 
 interface LevelProps {
@@ -150,104 +151,6 @@ function EmployeeCard({ profile }: { profile: Profile }) {
   );
 }
 
-function BrowserBar({
-  profileId,
-  onNavigate,
-  loading,
-}: {
-  profileId: number;
-  onNavigate: (id: number) => void;
-  loading: boolean;
-}) {
-  const [urlValue, setUrlValue] = useState(String(profileId));
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setUrlValue(String(profileId));
-  }, [profileId]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const id = parseInt(urlValue, 10);
-    if (!isNaN(id) && id > 0) onNavigate(id);
-  };
-
-  return (
-    <div
-      style={{
-        background: "#2b2b2b",
-        borderRadius: "10px 10px 0 0",
-        padding: "10px 14px",
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-      }}
-    >
-      <div style={{ display: "flex", gap: "6px" }}>
-        {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
-          <div
-            key={c}
-            style={{
-              width: "12px",
-              height: "12px",
-              borderRadius: "50%",
-              background: c,
-            }}
-          />
-        ))}
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          flex: 1,
-          background: "#3c3c3c",
-          borderRadius: "6px",
-          display: "flex",
-          alignItems: "center",
-          padding: "4px 10px",
-          gap: "0",
-          cursor: "text",
-        }}
-        onClick={() => inputRef.current?.focus()}
-      >
-        <span style={{ color: "#888", fontSize: "13px", userSelect: "none" }}>
-          🔒 corp-portal.internal/employees/
-        </span>
-        <input
-          ref={inputRef}
-          value={urlValue}
-          onChange={(e) => setUrlValue(e.target.value)}
-          disabled={loading}
-          style={{
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            color: "#f9a825",
-            fontSize: "13px",
-            fontWeight: "600",
-            width: `${Math.max(urlValue.length, 1) + 1}ch`,
-            padding: 0,
-          }}
-        />
-      </form>
-      <button
-        onClick={handleSubmit as unknown as React.MouseEventHandler}
-        disabled={loading}
-        style={{
-          background: "transparent",
-          border: "none",
-          color: "#aaa",
-          cursor: "pointer",
-          fontSize: "16px",
-          padding: "0 4px",
-        }}
-      >
-        ↵
-      </button>
-    </div>
-  );
-}
-
 export function Level3({ onSuccess }: LevelProps) {
   const [currentId, setCurrentId] = useState(1);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -299,6 +202,11 @@ export function Level3({ onSuccess }: LevelProps) {
     }
   };
 
+  const handleNavigate = (url: string) => {
+    const match = url.match(/\/(\d+)\s*$/);
+    if (match) fetchProfile(parseInt(match[1], 10));
+  };
+
   return (
     <div>
       <h3>Уровень 3: IDOR (Broken Access Control)</h3>
@@ -312,53 +220,56 @@ export function Level3({ onSuccess }: LevelProps) {
       </p>
 
       <div style={{ marginBottom: "20px" }}>
-        <BrowserBar
-          profileId={currentId}
-          onNavigate={fetchProfile}
-          loading={loading}
-        />
-        <div
-          style={{
-            background: "#f0f2f5",
-            borderRadius: "0 0 10px 10px",
-            padding: "20px",
-            minHeight: "200px",
-          }}
+        <BrowserWindow
+          url={`corp-portal.internal/employees/${currentId}`}
+          onNavigate={handleNavigate}
         >
           <div
             style={{
-              fontSize: "11px",
-              color: "#999",
-              marginBottom: "12px",
-              fontFamily: "monospace",
+              background: "#f0f2f5",
+              padding: "20px",
+              minHeight: "200px",
             }}
           >
-            GET /api/employees/{currentId} → 200 OK
-          </div>
-
-          {loading && (
-            <div
-              style={{ color: "#888", textAlign: "center", paddingTop: "40px" }}
-            >
-              Загрузка...
-            </div>
-          )}
-          {error && !loading && (
             <div
               style={{
-                color: "#dc3545",
-                background: "#fff5f5",
-                border: "1px solid #f5c2c7",
-                borderRadius: "8px",
-                padding: "12px 16px",
-                fontSize: "14px",
+                fontSize: "11px",
+                color: "#999",
+                marginBottom: "12px",
+                fontFamily: "monospace",
               }}
             >
-              404 — {error}
+              GET /api/employees/{currentId} → 200 OK
             </div>
-          )}
-          {profile && !loading && <EmployeeCard profile={profile} />}
-        </div>
+
+            {loading && (
+              <div
+                style={{
+                  color: "#888",
+                  textAlign: "center",
+                  paddingTop: "40px",
+                }}
+              >
+                Загрузка...
+              </div>
+            )}
+            {error && !loading && (
+              <div
+                style={{
+                  color: "#dc3545",
+                  background: "#fff5f5",
+                  border: "1px solid #f5c2c7",
+                  borderRadius: "8px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+              >
+                404 — {error}
+              </div>
+            )}
+            {profile && !loading && <EmployeeCard profile={profile} />}
+          </div>
+        </BrowserWindow>
       </div>
 
       <Button variant="danger" onClick={handleReset} disabled={resetLoading}>

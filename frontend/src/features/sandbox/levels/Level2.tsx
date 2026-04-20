@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
 
 interface LevelProps {
@@ -16,6 +17,13 @@ const ROLE_BADGE: Record<string, { bg: string; color: string }> = {
   moderator: { bg: "#fef3c7", color: "#d97706" },
   user: { bg: "#dbeafe", color: "#2563eb" },
 };
+
+const NAVBAR = [
+  { label: "Главная" },
+  { label: "Сотрудники", active: true },
+  { label: "Отделы" },
+  { label: "Отчёты" },
+];
 
 export function Level2({ onSuccess }: LevelProps) {
   const [username, setUsername] = useState("");
@@ -67,89 +75,18 @@ export function Level2({ onSuccess }: LevelProps) {
       </p>
 
       <div style={{ marginBottom: "20px" }}>
-        <div
-          style={{
-            background: "#2b2b2b",
-            borderRadius: "10px 10px 0 0",
-            padding: "10px 14px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <div style={{ display: "flex", gap: "6px" }}>
-            {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
-              <div
-                key={c}
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: c,
-                }}
-              />
-            ))}
-          </div>
-          <div
-            style={{
-              flex: 1,
-              background: "#3c3c3c",
-              borderRadius: "6px",
-              display: "flex",
-              alignItems: "center",
-              padding: "4px 10px",
-              gap: "6px",
-            }}
-          >
-            <span style={{ color: "#888", fontSize: "13px" }}>🔒</span>
-            <span style={{ color: "#ccc", fontSize: "13px" }}>
-              hr.corp-internal.io/employees/search
-            </span>
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: "#f8fafc",
-            borderRadius: "0 0 10px 10px",
-            overflow: "hidden",
-          }}
+        <BrowserWindow
+          url="hr.corp-internal.io/employees/search"
+          appName="HR Portal"
+          appColor="#2563eb"
+          navbar={NAVBAR}
         >
           <div
             style={{
-              background: "#1e293b",
-              padding: "0 24px",
-              display: "flex",
-              alignItems: "center",
-              gap: "24px",
-              borderBottom: "1px solid #334155",
+              background: "#f8fafc",
+              padding: "24px",
             }}
           >
-            {["Главная", "Сотрудники", "Отделы", "Отчёты"].map((item, i) => (
-              <div
-                key={item}
-                style={{
-                  padding: "14px 0",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: i === 1 ? "#38bdf8" : "#94a3b8",
-                  borderBottom:
-                    i === 1 ? "2px solid #38bdf8" : "2px solid transparent",
-                  cursor: "default",
-                  userSelect: "none",
-                }}
-              >
-                {item}
-              </div>
-            ))}
-            <div
-              style={{ marginLeft: "auto", color: "#475569", fontSize: "12px" }}
-            >
-              HR Portal v2.4.1
-            </div>
-          </div>
-
-          <div style={{ padding: "24px" }}>
             <div
               style={{
                 display: "flex",
@@ -374,7 +311,7 @@ export function Level2({ onSuccess }: LevelProps) {
               </div>
             )}
           </div>
-        </div>
+        </BrowserWindow>
       </div>
     </div>
   );

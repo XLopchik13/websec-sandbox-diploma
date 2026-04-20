@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
 
 interface LevelProps {
@@ -11,7 +12,12 @@ type FetchResult = {
   secret: string | null;
 };
 
-const NAV_ITEMS = ["Dashboard", "Link Checker", "Analytics", "Settings"];
+const NAVBAR = [
+  { label: "Dashboard" },
+  { label: "Link Checker", active: true },
+  { label: "Analytics" },
+  { label: "Settings" },
+];
 
 export function Level5({ onSuccess }: LevelProps) {
   const [url, setUrl] = useState("");
@@ -56,383 +62,277 @@ export function Level5({ onSuccess }: LevelProps) {
       </p>
       <p>Цель: получить секретные данные из внутренней инфраструктуры.</p>
 
-      <div
-        style={{
-          borderRadius: "10px",
-          overflow: "hidden",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-        }}
+      <BrowserWindow
+        url="tools.corp-internal.io/link-checker"
+        appName="LinkPeek"
+        appColor="#6366f1"
+        navbar={NAVBAR}
       >
         <div
           style={{
-            background: "#2b2b2b",
-            padding: "10px 14px",
+            background: "#f8fafc",
+            padding: "24px",
             display: "flex",
-            alignItems: "center",
-            gap: "10px",
+            gap: "20px",
+            alignItems: "flex-start",
           }}
         >
-          <div style={{ display: "flex", gap: "6px" }}>
-            {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ marginBottom: "16px" }}>
               <div
-                key={c}
                 style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: c,
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  color: "#0f172a",
+                  marginBottom: "4px",
                 }}
-              />
-            ))}
-          </div>
-          <div
-            style={{
-              flex: 1,
-              background: "#3c3c3c",
-              borderRadius: "6px",
-              padding: "4px 10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <span style={{ color: "#888", fontSize: "13px" }}>🔒</span>
-            <span style={{ color: "#ccc", fontSize: "13px" }}>
-              tools.corp-internal.io/link-checker
-            </span>
-          </div>
-        </div>
+              >
+                URL Checker
+              </div>
+              <div style={{ fontSize: "13px", color: "#64748b" }}>
+                Сервис делает серверный HTTP-запрос и возвращает содержимое
+                страницы.
+              </div>
+            </div>
 
-        <div style={{ background: "#f8fafc" }}>
-          <div
-            style={{
-              background: "#0f172a",
-              padding: "0 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0",
-            }}
-          >
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginRight: "24px",
-                padding: "12px 0",
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                borderRadius: "10px",
+                padding: "16px",
+                marginBottom: "14px",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
               }}
             >
               <div
                 style={{
-                  width: "28px",
-                  height: "28px",
-                  borderRadius: "6px",
-                  background: "#6366f1",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "13px",
-                  fontWeight: "800",
-                  color: "#fff",
+                  fontSize: "12px",
+                  color: "#475569",
+                  fontWeight: "600",
+                  marginBottom: "6px",
                 }}
               >
-                L
+                URL для проверки
               </div>
-              <span
-                style={{
-                  color: "#e2e8f0",
-                  fontSize: "14px",
-                  fontWeight: "700",
-                }}
-              >
-                LinkPeek
-              </span>
-            </div>
-            {NAV_ITEMS.map((item) => (
-              <div
-                key={item}
-                style={{
-                  padding: "14px 14px",
-                  fontSize: "13px",
-                  color: item === "Link Checker" ? "#fff" : "#94a3b8",
-                  borderBottom:
-                    item === "Link Checker"
-                      ? "2px solid #6366f1"
-                      : "2px solid transparent",
-                  cursor: "default",
-                  userSelect: "none",
-                }}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-
-          <div
-            style={{
-              padding: "24px",
-              display: "flex",
-              gap: "20px",
-              alignItems: "flex-start",
-            }}
-          >
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ marginBottom: "16px" }}>
-                <div
+              <div style={{ display: "flex", gap: "10px" }}>
+                <input
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleFetch()}
+                  placeholder="https://example.com"
+                  spellCheck={false}
                   style={{
-                    fontSize: "18px",
-                    fontWeight: "700",
+                    flex: 1,
+                    padding: "9px 12px",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "6px",
+                    fontSize: "13px",
+                    fontFamily: "monospace",
+                    outline: "none",
                     color: "#0f172a",
-                    marginBottom: "4px",
+                    background: "#f8fafc",
                   }}
-                >
-                  URL Checker
-                </div>
-                <div style={{ fontSize: "13px", color: "#64748b" }}>
-                  Сервис делает серверный HTTP-запрос и возвращает содержимое
-                  страницы.
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: "#fff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "10px",
-                  padding: "16px",
-                  marginBottom: "14px",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
+                />
+                <button
+                  onClick={handleFetch}
+                  disabled={loading || !url.trim()}
                   style={{
-                    fontSize: "12px",
-                    color: "#475569",
+                    background: "#6366f1",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "9px 20px",
+                    fontSize: "13px",
                     fontWeight: "600",
-                    marginBottom: "6px",
+                    cursor: loading ? "default" : "pointer",
+                    opacity: !url.trim() ? 0.5 : 1,
                   }}
                 >
-                  URL для проверки
-                </div>
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <input
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleFetch()}
-                    placeholder="https://example.com"
-                    spellCheck={false}
-                    style={{
-                      flex: 1,
-                      padding: "9px 12px",
-                      border: "1px solid #cbd5e1",
-                      borderRadius: "6px",
-                      fontSize: "13px",
-                      fontFamily: "monospace",
-                      outline: "none",
-                      color: "#0f172a",
-                      background: "#f8fafc",
-                    }}
-                  />
-                  <button
-                    onClick={handleFetch}
-                    disabled={loading || !url.trim()}
-                    style={{
-                      background: "#6366f1",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "6px",
-                      padding: "9px 20px",
-                      fontSize: "13px",
-                      fontWeight: "600",
-                      cursor: loading ? "default" : "pointer",
-                      opacity: !url.trim() ? 0.5 : 1,
-                    }}
-                  >
-                    {loading ? "Fetching..." : "Fetch"}
-                  </button>
-                </div>
+                  {loading ? "Fetching..." : "Fetch"}
+                </button>
               </div>
-
-              {result && (
-                <div
-                  style={{
-                    background: "#fff",
-                    border: `1px solid ${succeeded ? "#86efac" : "#e2e8f0"}`,
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "10px 16px",
-                      borderBottom: "1px solid #f1f5f9",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      background: succeeded ? "#f0fdf4" : "#f8fafc",
-                    }}
-                  >
-                    <span
-                      style={{
-                        background: statusColor,
-                        color: "#fff",
-                        padding: "2px 8px",
-                        borderRadius: "4px",
-                        fontSize: "11px",
-                        fontWeight: "700",
-                        fontFamily: "monospace",
-                      }}
-                    >
-                      {result.status || "ERR"}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "12px",
-                        color: "#64748b",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {url}
-                    </span>
-                    {succeeded && (
-                      <span
-                        style={{
-                          marginLeft: "auto",
-                          fontSize: "12px",
-                          color: "#16a34a",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        ✅ Получены внутренние данные
-                      </span>
-                    )}
-                  </div>
-                  <pre
-                    style={{
-                      margin: 0,
-                      padding: "14px 16px",
-                      fontSize: "12px",
-                      fontFamily: "monospace",
-                      color: "#e2e8f0",
-                      background: "#0d1117",
-                      overflowX: "auto",
-                      maxHeight: "200px",
-                      overflowY: "auto",
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                      textAlign: "left",
-                    }}
-                  >
-                    {result.content}
-                  </pre>
-                  {result.secret && (
-                    <div
-                      style={{
-                        padding: "12px 16px",
-                        background: "#f0fdf4",
-                        borderTop: "1px solid #86efac",
-                        fontSize: "13px",
-                        color: "#166534",
-                        fontFamily: "monospace",
-                      }}
-                    >
-                      secret: {result.secret}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
-            <div style={{ width: "200px", flexShrink: 0 }}>
+            {result && (
               <div
                 style={{
                   background: "#fff",
-                  border: "1px solid #e2e8f0",
+                  border: `1px solid ${succeeded ? "#86efac" : "#e2e8f0"}`,
                   borderRadius: "10px",
                   overflow: "hidden",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-                  fontSize: "12px",
                 }}
               >
                 <div
                   style={{
-                    background: "#f8fafc",
-                    padding: "10px 14px",
-                    borderBottom: "1px solid #e2e8f0",
-                    fontWeight: "700",
-                    color: "#0f172a",
-                    fontSize: "12px",
-                  }}
-                >
-                  Infrastructure
-                </div>
-                <div
-                  style={{
-                    padding: "12px 14px",
+                    padding: "10px 16px",
+                    borderBottom: "1px solid #f1f5f9",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
+                    alignItems: "center",
+                    gap: "10px",
+                    background: succeeded ? "#f0fdf4" : "#f8fafc",
                   }}
                 >
-                  {[
-                    ["Provider", "AWS"],
-                    ["Service", "EC2"],
-                    ["Region", "us-east-1"],
-                    ["Instance", "t3.medium"],
-                    ["AMI", "ami-0c55b159"],
-                  ].map(([k, v]) => (
-                    <div key={k}>
-                      <div
-                        style={{
-                          color: "#94a3b8",
-                          fontSize: "10px",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.4px",
-                        }}
-                      >
-                        {k}
-                      </div>
-                      <div
-                        style={{
-                          color: "#0f172a",
-                          fontFamily: "monospace",
-                          fontSize: "12px",
-                        }}
-                      >
-                        {v}
-                      </div>
-                    </div>
-                  ))}
-                  <div
+                  <span
                     style={{
-                      marginTop: "4px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
+                      background: statusColor,
+                      color: "#fff",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      fontFamily: "monospace",
                     }}
                   >
+                    {result.status || "ERR"}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "#64748b",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {url}
+                  </span>
+                  {succeeded && (
+                    <span
+                      style={{
+                        marginLeft: "auto",
+                        fontSize: "12px",
+                        color: "#16a34a",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      ✅ Получены внутренние данные
+                    </span>
+                  )}
+                </div>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px 16px",
+                    fontSize: "12px",
+                    fontFamily: "monospace",
+                    color: "#e2e8f0",
+                    background: "#0d1117",
+                    overflowX: "auto",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                    textAlign: "left",
+                  }}
+                >
+                  {result.content}
+                </pre>
+                {result.secret && (
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      background: "#f0fdf4",
+                      borderTop: "1px solid #86efac",
+                      fontSize: "13px",
+                      color: "#166534",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    secret: {result.secret}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: "200px", flexShrink: 0 }}>
+            <div
+              style={{
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                fontSize: "12px",
+              }}
+            >
+              <div
+                style={{
+                  background: "#f8fafc",
+                  padding: "10px 14px",
+                  borderBottom: "1px solid #e2e8f0",
+                  fontWeight: "700",
+                  color: "#0f172a",
+                  fontSize: "12px",
+                }}
+              >
+                Infrastructure
+              </div>
+              <div
+                style={{
+                  padding: "12px 14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                {[
+                  ["Provider", "AWS"],
+                  ["Service", "EC2"],
+                  ["Region", "us-east-1"],
+                  ["Instance", "t3.medium"],
+                  ["AMI", "ami-0c55b159"],
+                ].map(([k, v]) => (
+                  <div key={k}>
                     <div
                       style={{
-                        width: "7px",
-                        height: "7px",
-                        borderRadius: "50%",
-                        background: "#22c55e",
+                        color: "#94a3b8",
+                        fontSize: "10px",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.4px",
                       }}
-                    />
-                    <span style={{ color: "#16a34a", fontSize: "11px" }}>
-                      Running
-                    </span>
+                    >
+                      {k}
+                    </div>
+                    <div
+                      style={{
+                        color: "#0f172a",
+                        fontFamily: "monospace",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {v}
+                    </div>
                   </div>
+                ))}
+                <div
+                  style={{
+                    marginTop: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "7px",
+                      height: "7px",
+                      borderRadius: "50%",
+                      background: "#22c55e",
+                    }}
+                  />
+                  <span style={{ color: "#16a34a", fontSize: "11px" }}>
+                    Running
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </BrowserWindow>
     </div>
   );
 }
