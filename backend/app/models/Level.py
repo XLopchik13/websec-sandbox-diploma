@@ -10,5 +10,4 @@ class Level(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(200))
     description: Mapped[str] = mapped_column(Text)
-    owasp: Mapped[str] = mapped_column(String(10))
     category: Mapped[str] = mapped_column(String(100))

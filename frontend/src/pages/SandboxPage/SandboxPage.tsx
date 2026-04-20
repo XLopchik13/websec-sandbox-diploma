@@ -130,16 +130,6 @@ export function SandboxPage() {
                       <h3 style={{ margin: 0 }}>
                         {level.title}{" "}
                         {completedLevels.includes(level.id) && "✅"}
-                        <span
-                          style={{
-                            marginLeft: "8px",
-                            fontSize: "11px",
-                            color: "#888",
-                            fontWeight: "400",
-                          }}
-                        >
-                          {level.owasp}
-                        </span>
                       </h3>
                       <p style={{ margin: "5px 0 0", color: "#666" }}>
                         {level.description}

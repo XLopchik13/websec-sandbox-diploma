@@ -5,7 +5,6 @@ class LevelSchema(BaseModel):
     id: str
     title: str
     description: str
-    owasp: str
     category: str
 
     @field_validator("id", mode="before")

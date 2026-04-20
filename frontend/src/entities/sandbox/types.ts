@@ -2,7 +2,6 @@ export interface LevelMeta {
   id: string;
   title: string;
   description: string;
-  owasp: string;
   category: string;
 }
 
