@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import styles from "./Level1.module.scss";
 
 declare global {
   interface Window {
@@ -187,23 +189,13 @@ export function Level1({ onSuccess }: LevelProps) {
                     marginTop: "8px",
                   }}
                 >
-                  <button
+                  <Button
                     type="submit"
                     disabled={loading || !comment.trim()}
-                    style={{
-                      background: loading ? "#6c757d" : "#0d6efd",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "6px",
-                      padding: "8px 20px",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      cursor: loading ? "default" : "pointer",
-                      opacity: !comment.trim() ? 0.6 : 1,
-                    }}
+                    className={styles.submitBtn}
                   >
                     {loading ? "Публикация..." : "Опубликовать"}
-                  </button>
+                  </Button>
                 </div>
               </form>
 
@@ -227,20 +219,13 @@ export function Level1({ onSuccess }: LevelProps) {
                   Комментарии ({comments.length})
                 </div>
                 {comments.length > 0 && (
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={handleClear}
-                    style={{
-                      background: "transparent",
-                      border: "1px solid #f5c2c7",
-                      color: "#dc3545",
-                      borderRadius: "5px",
-                      padding: "4px 12px",
-                      fontSize: "12px",
-                      cursor: "pointer",
-                    }}
+                    className={styles.clearBtn}
                   >
                     Очистить
-                  </button>
+                  </Button>
                 )}
               </div>
 

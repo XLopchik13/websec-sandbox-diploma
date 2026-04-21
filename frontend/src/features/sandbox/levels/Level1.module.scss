@@ -1,0 +1,29 @@
+.submitBtn {
+  background: #0d6efd;
+  margin-top: 0;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: #0b5ed7;
+  }
+
+  &:disabled {
+    background: #6c757d;
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+.clearBtn {
+  color: #dc3545;
+  border-color: #f5c2c7;
+  margin: 0;
+  padding: 4px 12px;
+  font-size: 12px;
+
+  &:hover {
+    background: rgba(220, 53, 69, 0.05);
+  }
+}

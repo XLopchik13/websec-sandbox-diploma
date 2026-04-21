@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import { DevTools, type DevtoolsTab } from "@/shared/ui/DevTools/DevTools";
 import styles from "./BrowserWindow.module.scss";
 
@@ -88,13 +89,14 @@ export function BrowserWindow({
             onChange={(e) => setInputUrl(e.target.value)}
           />
         </form>
-        <button
+        <Button
+          variant="ghost"
           className={`${styles.f12Button} ${devtoolsOpen ? styles.active : ""}`}
           onClick={() => setDevtoolsOpen((v) => !v)}
           title="Toggle DevTools"
         >
           F12
-        </button>
+        </Button>
       </div>
 
       {/* Navbar */}

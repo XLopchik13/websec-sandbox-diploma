@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import styles from "./Level5.module.scss";
 
 interface LevelProps {
   onSuccess: () => void;
@@ -134,23 +136,13 @@ export function Level5({ onSuccess }: LevelProps) {
                     background: "#f8fafc",
                   }}
                 />
-                <button
+                <Button
                   onClick={handleFetch}
                   disabled={loading || !url.trim()}
-                  style={{
-                    background: "#6366f1",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "9px 20px",
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    cursor: loading ? "default" : "pointer",
-                    opacity: !url.trim() ? 0.5 : 1,
-                  }}
+                  className={styles.fetchBtn}
                 >
                   {loading ? "Fetching..." : "Fetch"}
-                </button>
+                </Button>
               </div>
             </div>
 

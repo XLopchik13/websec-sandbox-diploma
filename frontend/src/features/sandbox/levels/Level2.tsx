@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import styles from "./Level2.module.scss";
 
 interface LevelProps {
   onSuccess: () => void;
@@ -146,23 +148,13 @@ export function Level2({ onSuccess }: LevelProps) {
                     padding: "4px 0",
                   }}
                 />
-                <button
+                <Button
                   type="submit"
                   disabled={loading || !username.trim()}
-                  style={{
-                    background: "#2563eb",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "6px 18px",
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    cursor: !username.trim() || loading ? "default" : "pointer",
-                    opacity: !username.trim() ? 0.5 : 1,
-                  }}
+                  className={styles.searchBtn}
                 >
                   {loading ? "..." : "Найти"}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -189,21 +181,14 @@ export function Level2({ onSuccess }: LevelProps) {
                   <span style={{ color: "#64748b", fontSize: "13px" }}>
                     Найдено: {results.length}
                   </span>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={handleReset}
                     disabled={resetLoading}
-                    style={{
-                      background: "transparent",
-                      border: "1px solid #fecaca",
-                      color: "#dc2626",
-                      borderRadius: "5px",
-                      padding: "3px 10px",
-                      fontSize: "12px",
-                      cursor: "pointer",
-                    }}
+                    className={styles.resetBtn}
                   >
                     {resetLoading ? "..." : "Сбросить данные"}
-                  </button>
+                  </Button>
                 </div>
 
                 {results.length === 0 ? (

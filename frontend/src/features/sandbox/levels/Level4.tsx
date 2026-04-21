@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import styles from "./Level4.module.scss";
 
 interface LevelProps {
   onSuccess: () => void;
@@ -327,22 +329,13 @@ export function Level4({ onSuccess }: LevelProps) {
                 />
               </div>
             </div>
-            <button
+            <Button
               onClick={handleApply}
               disabled={loading || !constructedToken}
-              style={{
-                background: "#0e639c",
-                color: "#fff",
-                border: "none",
-                borderRadius: "3px",
-                padding: "5px 14px",
-                fontSize: "12px",
-                fontWeight: 500,
-                cursor: loading ? "default" : "pointer",
-              }}
+              className={styles.saveBtn}
             >
               {loading ? "Отправка..." : "Save changes to localStorage"}
-            </button>
+            </Button>
           </div>
         )}
       </div>

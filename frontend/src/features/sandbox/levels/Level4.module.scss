@@ -1,0 +1,17 @@
+.saveBtn {
+  background: #0e639c;
+  margin-top: 0;
+  border-radius: 3px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: #0c5484;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
