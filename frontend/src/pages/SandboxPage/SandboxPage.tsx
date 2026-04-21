@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/shared/ui/Button/Button";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
 import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
