@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LauncherWindow } from "@/shared/ui/LauncherWindow/LauncherWindow";
 import { LoginForm } from "@/features/auth/LoginForm/LoginForm";
 import { RegisterForm } from "@/features/auth/RegisterForm/RegisterForm";
+import styles from "./AuthPage.module.scss";
 
 interface AuthPageProps {
   onLogin: (email: string, password: string) => void;
@@ -27,23 +28,25 @@ export function AuthPage({
   };
 
   return (
-    <LauncherWindow
-      title={view === "login" ? "Login" : "Register"}
-      error={error}
-    >
-      {view === "login" ? (
-        <LoginForm
-          onSubmit={onLogin}
-          onSwitchToRegister={() => setView("register")}
-          disabled={loading}
-        />
-      ) : (
-        <RegisterForm
-          onSubmit={handleRegister}
-          onSwitchToLogin={() => setView("login")}
-          disabled={loading}
-        />
-      )}
-    </LauncherWindow>
+    <div className={styles.center}>
+      <LauncherWindow
+        title={view === "login" ? "Login" : "Register"}
+        error={error}
+      >
+        {view === "login" ? (
+          <LoginForm
+            onSubmit={onLogin}
+            onSwitchToRegister={() => setView("register")}
+            disabled={loading}
+          />
+        ) : (
+          <RegisterForm
+            onSubmit={handleRegister}
+            onSwitchToLogin={() => setView("login")}
+            disabled={loading}
+          />
+        )}
+      </LauncherWindow>
+    </div>
   );
 }

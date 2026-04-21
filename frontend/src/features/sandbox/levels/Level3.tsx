@@ -212,16 +212,6 @@ export function Level3({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 3: IDOR (Broken Access Control)</h3>
-      <p>
-        Ты авторизован на корпоративном портале и видишь свою страницу
-        сотрудника. Сервер возвращает профиль по числовому ID из URL — без
-        проверки, твой ли это аккаунт.
-      </p>
-      <p>
-        Цель: получить доступ к профилю с ролью <code>admin</code>.
-      </p>
-
       <div style={{ marginBottom: "20px" }}>
         <BrowserWindow
           url={`corp-portal.internal/employees/${currentId}`}

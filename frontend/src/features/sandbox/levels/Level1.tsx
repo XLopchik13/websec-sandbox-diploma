@@ -89,16 +89,6 @@ export function Level1({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 1: Stored XSS</h3>
-      <p>
-        Комментарии сохраняются на сервере и отображаются всем пользователям без
-        фильтрации. Выполните произвольный JavaScript.
-      </p>
-      <p>
-        Подсказка: используйте HTML-атрибуты событий, например{" "}
-        <code>{'<img src=x onerror="levelSuccess()">'}</code>
-      </p>
-
       <div style={{ marginBottom: "20px" }}>
         <BrowserWindow url="devblog.io/articles/web-security-2026#comments">
           <div

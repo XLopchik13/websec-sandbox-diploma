@@ -56,14 +56,6 @@ export function Level5({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 5: SSRF</h3>
-      <p>
-        Корпоративный инструмент проверки ссылок делает серверный HTTP-запрос к
-        любому указанному URL. Попробуй заставить сервер обратиться к внутренним
-        адресам.
-      </p>
-      <p>Цель: получить секретные данные из внутренней инфраструктуры.</p>
-
       <BrowserWindow
         url="tools.corp-internal.io/link-checker"
         appName="LinkPeek"

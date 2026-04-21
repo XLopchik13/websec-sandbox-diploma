@@ -64,18 +64,6 @@ export function Level2({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 2: SQL Injection</h3>
-      <p>
-        Форма поиска формирует SQL-запрос через конкатенацию строк без
-        параметризации.
-      </p>
-      <p>
-        Цель: получить запись с ролью <code>admin</code>.
-      </p>
-      <p>
-        Подсказка: <code>{"' OR role='admin' --"}</code>
-      </p>
-
       <div style={{ marginBottom: "20px" }}>
         <BrowserWindow
           url="hr.corp-internal.io/employees/search"

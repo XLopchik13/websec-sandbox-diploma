@@ -344,16 +344,6 @@ export function Level4({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 4: Broken Authentication</h3>
-      <p>
-        Корпоративный портал выдаёт JWT с ролью <code>user</code>. Сервер
-        принимает <code>alg:none</code> — подпись не проверяется.
-      </p>
-      <p>
-        Цель: получить доступ к Admin Panel. Открой DevTools (F12) и найди токен
-        сессии в Application → Local Storage.
-      </p>
-
       <div style={{ marginBottom: "0" }}>
         <BrowserWindow
           url="sso.corp-internal.io/dashboard"

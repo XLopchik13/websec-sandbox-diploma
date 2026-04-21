@@ -3,7 +3,7 @@ import { AuthPage } from "@/pages/AuthPage/AuthPage";
 import { SandboxPage } from "@/pages/SandboxPage/SandboxPage";
 
 export function App() {
-  const { user, loading, error, login, register } = useAuth();
+  const { user, token, loading, error, login, register, logout } = useAuth();
 
   const handleRegister = async (
     email: string,
@@ -16,8 +16,8 @@ export function App() {
     }
   };
 
-  if (user) {
-    return <SandboxPage />;
+  if (user && token) {
+    return <SandboxPage user={user} token={token} onLogout={logout} />;
   }
 
   return (
