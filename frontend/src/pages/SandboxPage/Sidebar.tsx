@@ -10,8 +10,6 @@ interface SidebarProps {
   selectedCategory: string | null;
   onSelectLevel: (id: string) => void;
   onSelectCategory: (category: string) => void;
-  onResetProgress: () => void;
-  showReset: boolean;
 }
 
 export function Sidebar({
@@ -23,8 +21,6 @@ export function Sidebar({
   selectedCategory,
   onSelectLevel,
   onSelectCategory,
-  onResetProgress,
-  showReset,
 }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${open ? "" : styles.closed}`}>
@@ -51,14 +47,6 @@ export function Sidebar({
           </div>
         ))}
       </nav>
-
-      {showReset && (
-        <div className={styles.footer}>
-          <button className={styles.resetBtn} onClick={onResetProgress}>
-            Сбросить прогресс
-          </button>
-        </div>
-      )}
     </aside>
   );
 }

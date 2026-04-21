@@ -9,6 +9,7 @@ interface AppHeaderProps {
   onToggleSidebar: () => void;
   onLogout: () => void;
   onProfile: () => void;
+  onResetProgress: () => void;
 }
 
 export function AppHeader({
@@ -19,6 +20,7 @@ export function AppHeader({
   onToggleSidebar,
   onLogout,
   onProfile,
+  onResetProgress,
 }: AppHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -59,7 +61,9 @@ export function AppHeader({
         {menuOpen && (
           <div className={styles.dropdown}>
             <div className={styles.dropdownInfo}>
-              <div className={styles.dropdownAvatar} />
+              <div className={styles.dropdownAvatar}>
+                {username.slice(0, 2).toUpperCase()}
+              </div>
               <div className={styles.dropdownMeta}>
                 <span className={styles.dropdownName}>{username}</span>
                 <span className={styles.dropdownSolved}>
@@ -76,6 +80,15 @@ export function AppHeader({
               }}
             >
               Сменить пароль
+            </button>
+            <button
+              className={`${styles.dropdownItem} ${styles.danger}`}
+              onClick={() => {
+                setMenuOpen(false);
+                onResetProgress();
+              }}
+            >
+              Сбросить прогресс
             </button>
             <button
               className={`${styles.dropdownItem} ${styles.danger}`}

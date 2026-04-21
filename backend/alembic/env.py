@@ -11,6 +11,8 @@ from app.models.Comment import Comment  # noqa: F401
 from app.models.SqliAccount import SqliAccount  # noqa: F401
 from app.models.IdorProfile import IdorProfile  # noqa: F401
 from app.models.Level import Level  # noqa: F401
+from app.models.CryptoUser import CryptoUser  # noqa: F401
+from app.models.BankAccount import BankAccount  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

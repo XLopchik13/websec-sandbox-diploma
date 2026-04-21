@@ -6,6 +6,11 @@ class ApiClient {
     options?: RequestInit,
   ): Promise<T> {
     const response = await fetch(`${API_URL}${endpoint}`, options);
+
+    if (response.status === 204) {
+      return null as T;
+    }
+
     const data = await response.json();
 
     if (!response.ok) {

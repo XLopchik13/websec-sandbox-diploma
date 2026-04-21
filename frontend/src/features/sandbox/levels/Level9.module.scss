@@ -1,0 +1,85 @@
+.input {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: monospace;
+  color: #0f172a;
+  outline: none;
+
+  &:focus {
+    border-color: #059669;
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.runBtn {
+  margin: 0;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #059669;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #047857;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.quickBtn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #475569;
+  cursor: pointer;
+  font-family: monospace;
+  transition: background 0.1s;
+
+  &:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+}
+
+.terminal {
+  background: #0f172a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.injectedBadge {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.terminalOutput {
+  margin: 0;
+  padding: 14px;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  color: #86efac;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.7;
+}

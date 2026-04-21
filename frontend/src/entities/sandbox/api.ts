@@ -23,11 +23,18 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  uncompleteLevel: async (token: string, levelId: string) => {
+    return apiClient.delete<void>(`/sandbox/progress/${levelId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
   resetProgress: async (token: string) => {
     return apiClient.delete<void>("/sandbox/progress", {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
+
+  // Level 1 — XSS
   createComment: async (token: string, levelId: string, content: string) => {
     return apiClient.post<{
       id: number;
@@ -38,17 +45,13 @@ export const sandboxApi = {
     }>(
       `/sandbox/levels/${levelId}/comments`,
       { content },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
+      { headers: { Authorization: `Bearer ${token}` } },
     );
   },
   deleteComments: async (token: string, levelId: string) => {
     return apiClient.delete<{ message: string }>(
       `/sandbox/levels/${levelId}/comments`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
+      { headers: { Authorization: `Bearer ${token}` } },
     );
   },
   getComments: async (token: string, levelId: string) => {
@@ -64,6 +67,8 @@ export const sandboxApi = {
       headers: { Authorization: `Bearer ${token}` },
     });
   },
+
+  // Level 2 — SQL Injection
   sqliSearch: async (token: string, username: string) => {
     return apiClient.get<Array<{ id: number; username: string; role: string }>>(
       `/sandbox/levels/2/search?username=${encodeURIComponent(username)}`,
@@ -77,6 +82,8 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+
+  // Level 3 — IDOR
   idorMyProfile: async (token: string) => {
     return apiClient.get<{
       id: number;
@@ -108,6 +115,8 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+
+  // Level 4 — Broken Auth (JWT)
   jwtGetToken: async (token: string) => {
     return apiClient.get<{ token: string }>("/sandbox/levels/4/token", {
       headers: { Authorization: `Bearer ${token}` },
@@ -125,6 +134,8 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+
+  // Level 5 — SSRF
   ssrfFetch: async (token: string, url: string) => {
     return apiClient.post<{
       status: number;
@@ -133,6 +144,88 @@ export const sandboxApi = {
     }>(
       "/sandbox/levels/5/fetch",
       { url },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+
+  // Level 6 — Path Traversal
+  pathTraversalRead: async (token: string, name: string) => {
+    return apiClient.get<{
+      found: boolean;
+      content: string | null;
+      traversal: boolean;
+    }>(`/sandbox/levels/6/file?name=${encodeURIComponent(name)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+
+  // Level 7 — Security Misconfiguration
+  misconfigLogin: async (token: string, username: string, password: string) => {
+    return apiClient.post<{
+      success: boolean;
+      role: string | null;
+      message: string;
+      secret: string | null;
+    }>(
+      "/sandbox/levels/7/login",
+      { username, password },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+
+  // Level 8 — Cryptographic Failures
+  cryptoGetUsers: async (token: string) => {
+    return apiClient.get<
+      Array<{ id: number; username: string; password_hash: string }>
+    >("/sandbox/levels/8/users", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  cryptoLogin: async (token: string, username: string, password: string) => {
+    return apiClient.post<{
+      success: boolean;
+      role: string | null;
+      message: string;
+    }>(
+      "/sandbox/levels/8/login",
+      { username, password },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+
+  // Level 9 — Command Injection
+  cmdiPing: async (token: string, host: string) => {
+    return apiClient.get<{ output: string; injected: boolean }>(
+      `/sandbox/levels/9/ping?host=${encodeURIComponent(host)}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+
+  // Level 10 — CSRF
+  csrfGetAccount: async (token: string) => {
+    return apiClient.get<{
+      balance: number;
+      last_transfer_to: string | null;
+      last_transfer_amount: number | null;
+    }>("/sandbox/levels/10/account", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  csrfTransfer: async (token: string, amount: number, to: string) => {
+    return apiClient.post<{
+      success: boolean;
+      balance: number;
+      message: string;
+    }>(
+      "/sandbox/levels/10/transfer",
+      { amount, to },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
+  csrfReset: async (token: string) => {
+    return apiClient.post<void>(
+      "/sandbox/levels/10/reset",
+      {},
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },

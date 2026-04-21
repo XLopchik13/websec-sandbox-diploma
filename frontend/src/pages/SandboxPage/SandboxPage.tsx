@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Button } from "@/shared/ui/Button/Button";
+import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
 import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
@@ -7,6 +9,13 @@ import { AppHeader } from "./AppHeader";
 import { Sidebar } from "./Sidebar";
 import { CategoryTheory } from "./CategoryTheory";
 import styles from "./SandboxPage.module.scss";
+
+const LEVEL_RESET_APIS: Record<string, (token: string) => Promise<unknown>> = {
+  "1": (token) => sandboxApi.deleteComments(token, "1"),
+  "2": (token) => sandboxApi.sqliReset(token),
+  "3": (token) => sandboxApi.idorReset(token),
+  "10": (token) => sandboxApi.csrfReset(token),
+};
 
 type View =
   | { kind: "welcome" }
@@ -25,6 +34,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
   const [view, setView] = useState<View>({ kind: "welcome" });
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     sandboxApi
@@ -49,6 +59,18 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
 
   const handleSelectCategory = (category: string) => {
     setView({ kind: "theory", category });
+  };
+
+  const handleLevelReset = async (id: string) => {
+    try {
+      const resetApi = LEVEL_RESET_APIS[id];
+      if (resetApi) await resetApi(token);
+      await sandboxApi.uncompleteLevel(token, id);
+      setCompletedLevels((prev) => prev.filter((l) => l !== id));
+      setResetKey((k) => k + 1);
+    } catch (err) {
+      console.error("Failed to reset level", err);
+    }
   };
 
   const handleLevelSuccess = async (id: string) => {
@@ -107,6 +129,15 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
             <h3>Изменить пароль</h3>
             <p className={styles.comingSoon}>Функция в разработке.</p>
           </div>
+          <div className={styles.profileSection}>
+            <h3>Прогресс</h3>
+            <p className={styles.comingSoon}>
+              Решено уровней: {completedLevels.length} / {levels.length}
+            </p>
+            <Button variant="danger" onClick={handleResetProgress}>
+              Сбросить прогресс
+            </Button>
+          </div>
         </div>
       );
     }
@@ -131,6 +162,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         <div className={styles.practiceRow}>
           <div className={styles.practiceMain}>
             <LevelComponent
+              key={`${selectedLevel.id}-${resetKey}`}
               onSuccess={() => handleLevelSuccess(selectedLevel.id)}
             />
           </div>
@@ -140,6 +172,10 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
               {selectedLevel.title}
             </h3>
             <p>{selectedLevel.description}</p>
+            <ResetLevelButton
+              onClick={() => handleLevelReset(selectedLevel.id)}
+              style={{ marginTop: "16px" }}
+            />
           </div>
         </div>
       );
@@ -158,6 +194,9 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
         onLogout={onLogout}
         onProfile={() => setView({ kind: "profile" })}
+        onResetProgress={function (): void {
+          throw new Error("Function not implemented.");
+        }}
       />
       <div className={styles.body}>
         <Sidebar
@@ -169,8 +208,6 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
           selectedCategory={selectedCategory}
           onSelectLevel={handleSelectLevel}
           onSelectCategory={handleSelectCategory}
-          onResetProgress={handleResetProgress}
-          showReset={completedLevels.length > 0}
         />
         <main className={styles.content}>{renderContent()}</main>
       </div>
