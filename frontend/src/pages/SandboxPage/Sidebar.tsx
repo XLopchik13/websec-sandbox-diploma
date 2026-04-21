@@ -7,7 +7,9 @@ interface SidebarProps {
   levels: SandboxLevel[];
   completedLevels: string[];
   selectedLevelId: string | null;
+  selectedCategory: string | null;
   onSelectLevel: (id: string) => void;
+  onSelectCategory: (category: string) => void;
   onResetProgress: () => void;
   showReset: boolean;
 }
@@ -18,7 +20,9 @@ export function Sidebar({
   levels,
   completedLevels,
   selectedLevelId,
+  selectedCategory,
   onSelectLevel,
+  onSelectCategory,
   onResetProgress,
   showReset,
 }: SidebarProps) {
@@ -27,13 +31,18 @@ export function Sidebar({
       <nav className={styles.nav}>
         {categories.map((category) => (
           <div key={category} className={styles.group}>
-            <div className={styles.groupHeader}>{category}</div>
+            <button
+              className={`${styles.groupHeader} ${selectedCategory === category ? styles.activeCategory : ""}`}
+              onClick={() => onSelectCategory(category)}
+            >
+              {category}
+            </button>
             {levels
               .filter((l) => l.category === category)
               .map((level) => (
                 <button
                   key={level.id}
-                  className={`${styles.levelItem} ${selectedLevelId === level.id ? styles.active : ""}`}
+                  className={`${styles.levelItem} ${selectedLevelId === level.id ? styles.active : ""} ${completedLevels.includes(level.id) ? styles.completed : ""}`}
                   onClick={() => onSelectLevel(level.id)}
                 >
                   {level.title}

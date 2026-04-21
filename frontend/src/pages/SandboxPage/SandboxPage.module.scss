@@ -47,113 +47,15 @@
   font-size: 48px;
 }
 
-.overview {
-  max-width: 640px;
-}
-
-.overviewMeta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.overviewCategory {
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.completedBadge {
-  font-size: 12px;
-  font-weight: 600;
-  color: #16a34a;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-.overviewTitle {
-  font-size: 28px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 16px;
-  line-height: 1.2;
-}
-
-.overviewDesc {
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.7;
-  margin: 0 0 32px;
-}
-
-.overviewActions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.theoryBtn {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  border-color: #cbd5e1;
-  color: #475569;
-  margin: 0;
-
-  &:hover {
-    background: #f8fafc;
-  }
-}
-
-.practiceBtn {
-  padding: 10px 28px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #0f172a;
-  margin: 0;
-
-  &:hover {
-    background: #1e293b;
-  }
-}
-
 .backBtn {
-  margin: 0 0 24px;
+  margin: 0 0 32px;
   padding: 0;
   color: #64748b;
   font-size: 13px;
   font-weight: 500;
 }
 
-.theoryContent {
-  max-width: 720px;
-
-  h1 {
-    font-size: 24px;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 24px;
-  }
-}
-
-.markdownArea {
-  color: #475569;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.placeholder {
-  color: #94a3b8;
-  font-style: italic;
-  margin: 0;
-}
-
-.practiceView {
+.practiceRow {
   display: flex;
   gap: 24px;
   align-items: flex-start;

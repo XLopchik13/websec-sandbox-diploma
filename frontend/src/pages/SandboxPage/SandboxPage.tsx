@@ -6,12 +6,12 @@ import type { SandboxLevel } from "@/entities/sandbox/types";
 import type { User } from "@/entities/user/types";
 import { AppHeader } from "./AppHeader";
 import { Sidebar } from "./Sidebar";
+import { CategoryTheory } from "./CategoryTheory";
 import styles from "./SandboxPage.module.scss";
 
 type View =
   | { kind: "welcome" }
-  | { kind: "overview"; levelId: string }
-  | { kind: "theory"; levelId: string }
+  | { kind: "theory"; category: string }
   | { kind: "practice"; levelId: string }
   | { kind: "profile" };
 
@@ -45,7 +45,11 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   }, [token]);
 
   const handleSelectLevel = (id: string) => {
-    setView({ kind: "overview", levelId: id });
+    setView({ kind: "practice", levelId: id });
+  };
+
+  const handleSelectCategory = (category: string) => {
+    setView({ kind: "theory", category });
   };
 
   const handleLevelSuccess = async (id: string) => {
@@ -73,8 +77,8 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
 
   const categories = [...new Set(levels.map((l) => l.category))];
 
-  const selectedLevelId =
-    view.kind !== "welcome" && view.kind !== "profile" ? view.levelId : null;
+  const selectedLevelId = view.kind === "practice" ? view.levelId : null;
+  const selectedCategory = view.kind === "theory" ? view.category : null;
   const selectedLevel = levels.find((l) => l.id === selectedLevelId);
 
   const renderContent = () => {
@@ -83,7 +87,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         <div className={styles.welcome}>
           <div className={styles.welcomeIcon}>🔐</div>
           <h2>Добро пожаловать в WEBSEC</h2>
-          <p>Выберите уровень в боковой панели, чтобы начать.</p>
+          <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
         </div>
       );
     }
@@ -108,82 +112,25 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
       );
     }
 
-    if (!selectedLevel) return null;
-
-    if (view.kind === "overview") {
-      const completed = completedLevels.includes(selectedLevel.id);
-      return (
-        <div className={styles.overview}>
-          <div className={styles.overviewMeta}>
-            <span className={styles.overviewCategory}>
-              {selectedLevel.category}
-            </span>
-            {completed && (
-              <span className={styles.completedBadge}>✓ Решено</span>
-            )}
-          </div>
-          <h1 className={styles.overviewTitle}>{selectedLevel.title}</h1>
-          <p className={styles.overviewDesc}>{selectedLevel.description}</p>
-          <div className={styles.overviewActions}>
-            <Button
-              variant="ghost"
-              className={styles.theoryBtn}
-              onClick={() =>
-                setView({ kind: "theory", levelId: selectedLevel.id })
-              }
-            >
-              Теория
-            </Button>
-            <Button
-              className={styles.practiceBtn}
-              onClick={() =>
-                setView({ kind: "practice", levelId: selectedLevel.id })
-              }
-            >
-              Практика
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
     if (view.kind === "theory") {
+      const categoryLevels = levels.filter((l) => l.category === view.category);
       return (
-        <div className={styles.theoryContent}>
-          <Button
-            variant="link"
-            className={styles.backBtn}
-            onClick={() =>
-              setView({ kind: "overview", levelId: selectedLevel.id })
-            }
-          >
-            Назад
-          </Button>
-          <h1>{selectedLevel.title} — Теория</h1>
-          <div className={styles.markdownArea}>
-            <p className={styles.placeholder}>
-              Теоретический материал будет добавлен позже.
-            </p>
-          </div>
-        </div>
+        <CategoryTheory
+          category={view.category}
+          levels={categoryLevels}
+          completedLevels={completedLevels}
+          onPractice={(id) => setView({ kind: "practice", levelId: id })}
+          onBack={() => setView({ kind: "welcome" })}
+        />
       );
     }
 
-    if (view.kind === "practice") {
+    if (view.kind === "practice" && selectedLevel) {
       const LevelComponent = selectedLevel.component;
       const levelNumber = selectedLevel.id.replace(/\D/g, "");
       return (
-        <div className={styles.practiceView}>
+        <div className={styles.practiceRow}>
           <div className={styles.practiceMain}>
-            <Button
-              variant="link"
-              className={styles.backBtn}
-              onClick={() =>
-                setView({ kind: "overview", levelId: selectedLevel.id })
-              }
-            >
-              Назад
-            </Button>
             <LevelComponent
               onSuccess={() => handleLevelSuccess(selectedLevel.id)}
             />
@@ -220,7 +167,9 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
           levels={levels}
           completedLevels={completedLevels}
           selectedLevelId={selectedLevelId}
+          selectedCategory={selectedCategory}
           onSelectLevel={handleSelectLevel}
+          onSelectCategory={handleSelectCategory}
           onResetProgress={handleResetProgress}
           showReset={completedLevels.length > 0}
         />
