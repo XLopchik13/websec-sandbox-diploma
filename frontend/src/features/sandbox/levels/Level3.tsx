@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
@@ -159,22 +159,25 @@ export function Level3({ onSuccess }: LevelProps) {
   const [resetLoading, setResetLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  const fetchProfile = async (id: number) => {
-    if (!token) return;
-    setLoading(true);
-    setError("");
-    try {
-      const data = await sandboxApi.idorGetProfile(token, id);
-      setProfile(data);
-      setCurrentId(id);
-      if (data.role === "admin") onSuccess();
-    } catch {
-      setError(`Профиль #${id} не найден`);
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchProfile = useCallback(
+    async (id: number) => {
+      if (!token) return;
+      setLoading(true);
+      setError("");
+      try {
+        const data = await sandboxApi.idorGetProfile(token, id);
+        setProfile(data);
+        setCurrentId(id);
+        if (data.role === "admin") onSuccess();
+      } catch {
+        setError(`Профиль #${id} не найден`);
+        setProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [token, onSuccess],
+  );
 
   useEffect(() => {
     if (!token) return;
@@ -185,7 +188,7 @@ export function Level3({ onSuccess }: LevelProps) {
         setCurrentId(p.id);
       })
       .catch(() => fetchProfile(1));
-  }, []);
+  }, [token, fetchProfile]);
 
   const handleReset = async () => {
     if (!token) return;

@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { DevTools, type DevtoolsTab } from "@/shared/ui/DevTools/DevTools";
 import styles from "./BrowserWindow.module.scss";
@@ -45,11 +45,13 @@ export function BrowserWindow({
   const [inputUrl, setInputUrl] = useState(url);
   const [navigatedAway, setNavigatedAway] = useState(false);
   const [devtoolsOpen, setDevtoolsOpen] = useState(false);
+  const [prevUrl, setPrevUrl] = useState(url);
 
-  useEffect(() => {
+  if (prevUrl !== url) {
+    setPrevUrl(url);
     setInputUrl(url);
     setNavigatedAway(false);
-  }, [url]);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
