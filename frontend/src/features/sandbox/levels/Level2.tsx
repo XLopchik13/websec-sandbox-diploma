@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { Button } from "@/shared/ui/Button/Button";
+import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import styles from "./Level2.module.scss";
 
 interface LevelProps {
   onSuccess: () => void;
@@ -16,6 +19,13 @@ const ROLE_BADGE: Record<string, { bg: string; color: string }> = {
   moderator: { bg: "#fef3c7", color: "#d97706" },
   user: { bg: "#dbeafe", color: "#2563eb" },
 };
+
+const NAVBAR = [
+  { label: "Главная" },
+  { label: "Сотрудники", active: true },
+  { label: "Отделы" },
+  { label: "Отчёты" },
+];
 
 export function Level2({ onSuccess }: LevelProps) {
   const [username, setUsername] = useState("");
@@ -54,102 +64,19 @@ export function Level2({ onSuccess }: LevelProps) {
 
   return (
     <div>
-      <h3>Уровень 2: SQL Injection</h3>
-      <p>
-        Форма поиска формирует SQL-запрос через конкатенацию строк без
-        параметризации.
-      </p>
-      <p>
-        Цель: получить запись с ролью <code>admin</code>.
-      </p>
-      <p>
-        Подсказка: <code>{"' OR role='admin' --"}</code>
-      </p>
-
       <div style={{ marginBottom: "20px" }}>
-        <div
-          style={{
-            background: "#2b2b2b",
-            borderRadius: "10px 10px 0 0",
-            padding: "10px 14px",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <div style={{ display: "flex", gap: "6px" }}>
-            {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
-              <div
-                key={c}
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: c,
-                }}
-              />
-            ))}
-          </div>
-          <div
-            style={{
-              flex: 1,
-              background: "#3c3c3c",
-              borderRadius: "6px",
-              display: "flex",
-              alignItems: "center",
-              padding: "4px 10px",
-              gap: "6px",
-            }}
-          >
-            <span style={{ color: "#888", fontSize: "13px" }}>🔒</span>
-            <span style={{ color: "#ccc", fontSize: "13px" }}>
-              hr.corp-internal.io/employees/search
-            </span>
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: "#f8fafc",
-            borderRadius: "0 0 10px 10px",
-            overflow: "hidden",
-          }}
+        <BrowserWindow
+          url="hr.corp-internal.io/employees/search"
+          appName="HR Portal"
+          appColor="#2563eb"
+          navbar={NAVBAR}
         >
           <div
             style={{
-              background: "#1e293b",
-              padding: "0 24px",
-              display: "flex",
-              alignItems: "center",
-              gap: "24px",
-              borderBottom: "1px solid #334155",
+              background: "#f8fafc",
+              padding: "24px",
             }}
           >
-            {["Главная", "Сотрудники", "Отделы", "Отчёты"].map((item, i) => (
-              <div
-                key={item}
-                style={{
-                  padding: "14px 0",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: i === 1 ? "#38bdf8" : "#94a3b8",
-                  borderBottom:
-                    i === 1 ? "2px solid #38bdf8" : "2px solid transparent",
-                  cursor: "default",
-                  userSelect: "none",
-                }}
-              >
-                {item}
-              </div>
-            ))}
-            <div
-              style={{ marginLeft: "auto", color: "#475569", fontSize: "12px" }}
-            >
-              HR Portal v2.4.1
-            </div>
-          </div>
-
-          <div style={{ padding: "24px" }}>
             <div
               style={{
                 display: "flex",
@@ -209,23 +136,13 @@ export function Level2({ onSuccess }: LevelProps) {
                     padding: "4px 0",
                   }}
                 />
-                <button
+                <Button
                   type="submit"
                   disabled={loading || !username.trim()}
-                  style={{
-                    background: "#2563eb",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "6px 18px",
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    cursor: !username.trim() || loading ? "default" : "pointer",
-                    opacity: !username.trim() ? 0.5 : 1,
-                  }}
+                  className={styles.searchBtn}
                 >
                   {loading ? "..." : "Найти"}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -252,21 +169,14 @@ export function Level2({ onSuccess }: LevelProps) {
                   <span style={{ color: "#64748b", fontSize: "13px" }}>
                     Найдено: {results.length}
                   </span>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={handleReset}
                     disabled={resetLoading}
-                    style={{
-                      background: "transparent",
-                      border: "1px solid #fecaca",
-                      color: "#dc2626",
-                      borderRadius: "5px",
-                      padding: "3px 10px",
-                      fontSize: "12px",
-                      cursor: "pointer",
-                    }}
+                    className={styles.resetBtn}
                   >
                     {resetLoading ? "..." : "Сбросить данные"}
-                  </button>
+                  </Button>
                 </div>
 
                 {results.length === 0 ? (
@@ -374,7 +284,7 @@ export function Level2({ onSuccess }: LevelProps) {
               </div>
             )}
           </div>
-        </div>
+        </BrowserWindow>
       </div>
     </div>
   );

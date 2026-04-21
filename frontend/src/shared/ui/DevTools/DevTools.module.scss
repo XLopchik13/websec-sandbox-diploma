@@ -1,0 +1,295 @@
+.root {
+  background: #1e1e1e;
+  border-left: 1px solid #3c3c3c;
+  width: 460px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabBar {
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  flex-shrink: 0;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+}
+
+.tab {
+  padding: 7px 12px;
+  font-size: 12px;
+  color: #9d9d9d;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #ccc;
+  }
+
+  &.active {
+    color: #fff;
+    border-bottom-color: #f97316;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.defaultElements {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: monospace;
+  line-height: 1.9;
+  user-select: none;
+  color: #4ec9b0;
+}
+
+.domRow {
+  color: #4ec9b0;
+}
+
+.domRowMuted {
+  color: #d4d4d4;
+}
+
+.domRowComment {
+  color: #808080;
+}
+
+.consoleRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  font-family: monospace;
+
+  &.warn {
+    background: #332b00;
+    color: #ffcc00;
+  }
+
+  &.info {
+    color: #4fc1ff;
+  }
+
+  &.log {
+    color: #d4d4d4;
+  }
+}
+
+.consoleSrc {
+  color: #6a9955;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.sourcesRoot {
+  display: flex;
+  height: 100%;
+}
+
+.sourcesTree {
+  width: 160px;
+  background: #252526;
+  border-right: 1px solid #3c3c3c;
+  padding: 8px 0;
+  font-size: 12px;
+}
+
+.sourcesTreeHeader {
+  color: #9d9d9d;
+  padding: 2px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sourcesFile {
+  padding: 3px 12px 3px 24px;
+  color: #d4d4d4;
+  cursor: default;
+}
+
+.sourcesEmpty {
+  flex: 1;
+  padding: 12px;
+  color: #6a9955;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.networkHeader {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px 52px;
+  padding: 4px 12px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.networkHeaderCell {
+  font-size: 11px;
+  color: #9d9d9d;
+  font-weight: 600;
+}
+
+.networkRow {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px 52px;
+  padding: 4px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.networkMethod {
+  &.get {
+    color: #4fc1ff;
+  }
+  &.post {
+    color: #daa520;
+  }
+  &.other {
+    color: #9d9d9d;
+  }
+}
+
+.networkUrl {
+  color: #d4d4d4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.networkStatus {
+  &.ok {
+    color: #4ec9b0;
+  }
+  &.err {
+    color: #ce9178;
+  }
+}
+
+.networkTime {
+  color: #9d9d9d;
+}
+
+.appRoot {
+  display: flex;
+  height: 100%;
+}
+
+.appSidebar {
+  width: 160px;
+  flex-shrink: 0;
+  background: #252526;
+  border-right: 1px solid #3c3c3c;
+  padding: 8px 0;
+  font-size: 12px;
+  overflow-y: auto;
+}
+
+.appSidebarHeader {
+  color: #9d9d9d;
+  padding: 2px 12px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.appSidebarItem {
+  color: #9d9d9d;
+  padding: 3px 12px 3px 20px;
+  margin-top: 2px;
+}
+
+.appSidebarSelected {
+  padding: 3px 12px 3px 28px;
+  color: #fff;
+  background: #094771;
+  cursor: default;
+}
+
+.appTable {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.appTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3c3c3c;
+  padding: 4px 12px;
+}
+
+.appTableHeaderCell {
+  font-size: 11px;
+  color: #9d9d9d;
+  font-weight: 600;
+}
+
+.appTableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.appTableKey {
+  color: #ce9178;
+}
+
+.appTableValue {
+  color: #9cdcfe;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memoryRoot {
+  padding: 16px;
+  font-size: 12px;
+  color: #9d9d9d;
+}
+
+.memoryTitle {
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #d4d4d4;
+}
+
+.memoryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: #2d2d2d;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.memoryValue {
+  color: #4fc1ff;
+  font-family: monospace;
+}

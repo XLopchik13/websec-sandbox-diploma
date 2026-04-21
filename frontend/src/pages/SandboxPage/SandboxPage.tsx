@@ -1,18 +1,32 @@
 import { useState, useEffect } from "react";
-import { LauncherWindow } from "@/shared/ui/LauncherWindow/LauncherWindow";
-import { Button } from "@/shared/ui/Button/Button";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
 import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
+import type { User } from "@/entities/user/types";
+import { AppHeader } from "./AppHeader";
+import { Sidebar } from "./Sidebar";
+import { CategoryTheory } from "./CategoryTheory";
+import styles from "./SandboxPage.module.scss";
 
-export function SandboxPage() {
+type View =
+  | { kind: "welcome" }
+  | { kind: "theory"; category: string }
+  | { kind: "practice"; levelId: string }
+  | { kind: "profile" };
+
+interface SandboxPageProps {
+  user: User;
+  token: string;
+  onLogout: () => void;
+}
+
+export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   const [levels, setLevels] = useState<SandboxLevel[]>([]);
-  const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
-  const token = localStorage.getItem("token");
+  const [view, setView] = useState<View>({ kind: "welcome" });
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
     sandboxApi
       .getLevels(token)
       .then((meta) =>
@@ -29,10 +43,16 @@ export function SandboxPage() {
       .catch(console.error);
   }, [token]);
 
-  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
+  const handleSelectLevel = (id: string) => {
+    setView({ kind: "practice", levelId: id });
+  };
+
+  const handleSelectCategory = (category: string) => {
+    setView({ kind: "theory", category });
+  };
 
   const handleLevelSuccess = async (id: string) => {
-    if (!completedLevels.includes(id) && token) {
+    if (!completedLevels.includes(id)) {
       try {
         const { completed } = await sandboxApi.completeLevel(token, id);
         setCompletedLevels(completed);
@@ -43,8 +63,8 @@ export function SandboxPage() {
     }
   };
 
-  const resetProgress = async () => {
-    if (confirm("Вы уверены, что хотите сбросить весь прогресс?") && token) {
+  const handleResetProgress = async () => {
+    if (confirm("Сбросить весь прогресс?")) {
       try {
         await sandboxApi.resetProgress(token);
         setCompletedLevels([]);
@@ -54,98 +74,106 @@ export function SandboxPage() {
     }
   };
 
-  if (selectedLevel) {
-    const LevelComponent = selectedLevel.component;
-    return (
-      <LauncherWindow title={selectedLevel.title} wide>
-        <Button
-          variant="link"
-          onClick={() => setSelectedLevelId(null)}
-          style={{ marginBottom: "20px", padding: 0 }}
-        >
-          ← Назад к списку
-        </Button>
-        <LevelComponent
-          onSuccess={() => handleLevelSuccess(selectedLevel.id)}
-        />
-      </LauncherWindow>
-    );
-  }
-
   const categories = [...new Set(levels.map((l) => l.category))];
 
-  return (
-    <LauncherWindow title="Песочницы" wide>
-      <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Выберите уровень</h2>
-          {completedLevels.length > 0 && (
-            <Button
-              variant="link"
-              onClick={resetProgress}
-              style={{ color: "#ff4444" }}
-            >
-              Сбросить прогресс
-            </Button>
-          )}
-        </div>
+  const selectedLevelId = view.kind === "practice" ? view.levelId : null;
+  const selectedCategory = view.kind === "theory" ? view.category : null;
+  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
 
-        {categories.map((category) => (
-          <div key={category}>
-            <h3
-              style={{
-                margin: "10px 0 8px",
-                color: "#555",
-                fontSize: "13px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              {category}
-            </h3>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              {levels
-                .filter((l) => l.category === category)
-                .map((level) => (
-                  <div
-                    key={level.id}
-                    style={{
-                      padding: "15px",
-                      border: "1px solid #eee",
-                      borderRadius: "8px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <h3 style={{ margin: 0 }}>
-                        {level.title}{" "}
-                        {completedLevels.includes(level.id) && "✅"}
-                      </h3>
-                      <p style={{ margin: "5px 0 0", color: "#666" }}>
-                        {level.description}
-                      </p>
-                    </div>
-                    <Button onClick={() => setSelectedLevelId(level.id)}>
-                      {completedLevels.includes(level.id)
-                        ? "Повторить"
-                        : "Начать"}
-                    </Button>
-                  </div>
-                ))}
-            </div>
+  const renderContent = () => {
+    if (view.kind === "welcome") {
+      return (
+        <div className={styles.welcome}>
+          <div className={styles.welcomeIcon}>🔐</div>
+          <h2>Добро пожаловать в WEBSEC</h2>
+          <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
+        </div>
+      );
+    }
+
+    if (view.kind === "profile") {
+      return (
+        <div className={styles.profileView}>
+          <h2>Профиль</h2>
+          <div className={styles.profileCard}>
+            <p>
+              <strong>Имя пользователя:</strong> {user.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
           </div>
-        ))}
+          <div className={styles.profileSection}>
+            <h3>Изменить пароль</h3>
+            <p className={styles.comingSoon}>Функция в разработке.</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (view.kind === "theory") {
+      const categoryLevels = levels.filter((l) => l.category === view.category);
+      return (
+        <CategoryTheory
+          category={view.category}
+          levels={categoryLevels}
+          completedLevels={completedLevels}
+          onPractice={(id) => setView({ kind: "practice", levelId: id })}
+          onBack={() => setView({ kind: "welcome" })}
+        />
+      );
+    }
+
+    if (view.kind === "practice" && selectedLevel) {
+      const LevelComponent = selectedLevel.component;
+      const levelNumber = selectedLevel.id.replace(/\D/g, "");
+      return (
+        <div className={styles.practiceRow}>
+          <div className={styles.practiceMain}>
+            <LevelComponent
+              onSuccess={() => handleLevelSuccess(selectedLevel.id)}
+            />
+          </div>
+          <div className={styles.practiceInfoPanel}>
+            <h3>
+              {levelNumber ? `Уровень ${levelNumber}: ` : ""}
+              {selectedLevel.title}
+            </h3>
+            <p>{selectedLevel.description}</p>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <div className={styles.root}>
+      <AppHeader
+        username={user.username}
+        solved={completedLevels.length}
+        total={levels.length}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((v) => !v)}
+        onLogout={onLogout}
+        onProfile={() => setView({ kind: "profile" })}
+      />
+      <div className={styles.body}>
+        <Sidebar
+          open={sidebarOpen}
+          categories={categories}
+          levels={levels}
+          completedLevels={completedLevels}
+          selectedLevelId={selectedLevelId}
+          selectedCategory={selectedCategory}
+          onSelectLevel={handleSelectLevel}
+          onSelectCategory={handleSelectCategory}
+          onResetProgress={handleResetProgress}
+          showReset={completedLevels.length > 0}
+        />
+        <main className={styles.content}>{renderContent()}</main>
       </div>
-    </LauncherWindow>
+    </div>
   );
 }

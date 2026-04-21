@@ -34,4 +34,20 @@
       background: #cc0000;
     }
   }
+
+  &.ghost {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    margin-top: 0;
+
+    &:hover {
+      background: rgba(128, 128, 128, 0.08);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
 }

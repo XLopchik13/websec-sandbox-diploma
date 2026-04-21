@@ -1,0 +1,128 @@
+.root {
+  max-width: 760px;
+}
+
+.backBtn {
+  margin: 0 0 28px;
+  padding: 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 32px;
+}
+
+.theory {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.8;
+
+  section {
+    margin-bottom: 36px;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 12px;
+  }
+
+  p {
+    margin: 0 0 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  code {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #0f172a;
+  }
+}
+
+.placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.levelCards {
+  margin-top: 40px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 32px;
+}
+
+.practiceHeading {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 16px;
+}
+
+.levelCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+.levelCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.levelCardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.levelCardDesc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.practiceBtn {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+
+  &:hover {
+    background: #1e293b;
+  }
+}
+
+.solvedBtn {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #16a34a;
+  margin: 0;
+  white-space: nowrap;
+
+  &:hover {
+    background: #15803d;
+  }
+}

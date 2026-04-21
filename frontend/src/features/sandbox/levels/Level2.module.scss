@@ -1,0 +1,29 @@
+.searchBtn {
+  background: #2563eb;
+  margin-top: 0;
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: #1d4ed8;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.resetBtn {
+  color: #dc2626;
+  border-color: #fecaca;
+  margin: 0;
+  padding: 3px 10px;
+  font-size: 12px;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+}
