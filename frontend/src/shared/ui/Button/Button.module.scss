@@ -9,8 +9,13 @@
   font-family: inherit;
   transition: background-color 0.2s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: #535bf2;
+  }
+
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
   }
 
   &.link {
