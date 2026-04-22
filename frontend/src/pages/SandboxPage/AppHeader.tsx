@@ -9,7 +9,7 @@ interface AppHeaderProps {
   onToggleSidebar: () => void;
   onHome: () => void;
   onLogout: () => void;
-  onProfile: () => void;
+  onChangePassword: () => void;
   onResetProgress: () => void;
 }
 
@@ -21,7 +21,7 @@ export function AppHeader({
   onToggleSidebar,
   onHome,
   onLogout,
-  onProfile,
+  onChangePassword,
   onResetProgress,
 }: AppHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -80,7 +80,7 @@ export function AppHeader({
               className={styles.dropdownItem}
               onClick={() => {
                 setMenuOpen(false);
-                onProfile();
+                onChangePassword();
               }}
             >
               Сменить пароль
