@@ -108,13 +108,11 @@ function EmployeeCard({ profile }: { profile: Profile }) {
       <div style={{ padding: "20px 24px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ fontSize: "16px" }}>✉️</span>
             <span style={{ color: "#555", fontSize: "14px" }}>
               {profile.email}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ fontSize: "16px" }}>📱</span>
             <span style={{ color: "#555", fontSize: "14px" }}>
               {profile.phone}
             </span>
@@ -185,12 +183,17 @@ export function Level3({ onSuccess }: LevelProps) {
         setProfile(p);
         setCurrentId(p.id);
       })
-      .catch(() => fetchProfile(1));
-  }, [token, fetchProfile]);
+      .catch(() => setError("Не удалось загрузить профиль"));
+  }, [token]);
 
   const handleNavigate = (url: string) => {
     const match = url.match(/\/(\d+)\s*$/);
-    if (match) fetchProfile(parseInt(match[1], 10));
+    if (match) {
+      fetchProfile(parseInt(match[1], 10));
+    } else {
+      setError(`Некорректный URL: "${url}"`);
+      setProfile(null);
+    }
   };
 
   return (
