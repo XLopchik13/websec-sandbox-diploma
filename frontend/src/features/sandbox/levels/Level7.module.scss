@@ -1,0 +1,140 @@
+.loginCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 32px 36px;
+  width: 320px;
+  text-align: center;
+}
+
+.loginLogo {
+  margin-bottom: 12px;
+}
+
+.loginTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.loginVersion {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loginInput {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #e2e8f0;
+  font-family: inherit;
+  outline: none;
+
+  &:focus {
+    border-color: #0369a1;
+  }
+
+  &::placeholder {
+    color: #475569;
+  }
+}
+
+.loginError {
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: #fca5a5;
+  text-align: left;
+}
+
+.loginBtn {
+  background: #0369a1;
+  margin: 4px 0 0;
+  padding: 9px;
+  font-size: 13px;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: #0284c7;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboardBadge {
+  background: #14532d;
+  border: 1px solid #166534;
+  color: #86efac;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.statCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.secretBox {
+  background: #1a1200;
+  border: 1px solid #713f12;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #fef3c7;
+
+  code {
+    font-family: monospace;
+    color: #fbbf24;
+  }
+}

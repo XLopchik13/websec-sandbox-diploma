@@ -87,6 +87,10 @@
   p {
     margin: 0;
   }
+
+  .resetBtn {
+    margin-top: 16px;
+  }
 }
 
 .profileView {
@@ -120,6 +124,8 @@
 }
 
 .profileSection {
+  margin-top: 24px;
+
   h3 {
     font-size: 15px;
     font-weight: 700;

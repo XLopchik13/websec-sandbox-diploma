@@ -35,6 +35,15 @@ async def complete_level(
     return await _build_progress(db, current_user.id)
 
 
+@router.delete("/progress/{level_id}", status_code=204)
+async def uncomplete_level(
+    level_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    await crud_progress.uncomplete_level(db, current_user.id, level_id)
+
+
 @router.delete("/progress", status_code=204)
 async def reset_progress(
     db: AsyncSession = Depends(get_db),

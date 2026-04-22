@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
 
@@ -156,7 +155,6 @@ export function Level3({ onSuccess }: LevelProps) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   const fetchProfile = useCallback(
@@ -190,21 +188,6 @@ export function Level3({ onSuccess }: LevelProps) {
       .catch(() => fetchProfile(1));
   }, [token, fetchProfile]);
 
-  const handleReset = async () => {
-    if (!token) return;
-    setResetLoading(true);
-    try {
-      await sandboxApi.idorReset(token);
-      await sandboxApi.idorMyProfile(token).then((p) => {
-        setProfile(p);
-        setCurrentId(p.id);
-        setError("");
-      });
-    } finally {
-      setResetLoading(false);
-    }
-  };
-
   const handleNavigate = (url: string) => {
     const match = url.match(/\/(\d+)\s*$/);
     if (match) fetchProfile(parseInt(match[1], 10));
@@ -221,7 +204,7 @@ export function Level3({ onSuccess }: LevelProps) {
             style={{
               background: "#f0f2f5",
               padding: "20px",
-              minHeight: "200px",
+              minHeight: "420px",
             }}
           >
             <div
@@ -264,10 +247,6 @@ export function Level3({ onSuccess }: LevelProps) {
           </div>
         </BrowserWindow>
       </div>
-
-      <Button variant="danger" onClick={handleReset} disabled={resetLoading}>
-        {resetLoading ? "Сброс..." : "Сбросить данные"}
-      </Button>
     </div>
   );
 }

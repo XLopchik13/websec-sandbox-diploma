@@ -352,7 +352,7 @@ export function Level4({ onSuccess }: LevelProps) {
           devtoolsSlots={{ Application: applicationSlot }}
           devtoolsDefaultTab="Application"
         >
-          <div style={{ background: "#f1f5f9" }}>
+          <div style={{ background: "#f1f5f9", minHeight: "240px" }}>
             <div style={{ padding: "24px 20px" }}>
               {fetchLoading ? (
                 <div

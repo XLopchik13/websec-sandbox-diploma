@@ -95,6 +95,7 @@ export function Level1({ onSuccess }: LevelProps) {
             style={{
               background: "#f0f2f5",
               overflow: "hidden",
+              minHeight: "420px",
             }}
           >
             <div

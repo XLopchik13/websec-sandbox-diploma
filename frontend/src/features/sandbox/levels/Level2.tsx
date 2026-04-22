@@ -32,7 +32,6 @@ export function Level2({ onSuccess }: LevelProps) {
   const [results, setResults] = useState<Account[]>([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -49,19 +48,6 @@ export function Level2({ onSuccess }: LevelProps) {
     }
   };
 
-  const handleReset = async () => {
-    if (!token) return;
-    setResetLoading(true);
-    try {
-      await sandboxApi.sqliReset(token);
-      setResults([]);
-      setSearched(false);
-      setUsername("");
-    } finally {
-      setResetLoading(false);
-    }
-  };
-
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -75,6 +61,7 @@ export function Level2({ onSuccess }: LevelProps) {
             style={{
               background: "#f8fafc",
               padding: "24px",
+              minHeight: "420px",
             }}
           >
             <div
@@ -169,14 +156,6 @@ export function Level2({ onSuccess }: LevelProps) {
                   <span style={{ color: "#64748b", fontSize: "13px" }}>
                     Найдено: {results.length}
                   </span>
-                  <Button
-                    variant="ghost"
-                    onClick={handleReset}
-                    disabled={resetLoading}
-                    className={styles.resetBtn}
-                  >
-                    {resetLoading ? "..." : "Сбросить данные"}
-                  </Button>
                 </div>
 
                 {results.length === 0 ? (
