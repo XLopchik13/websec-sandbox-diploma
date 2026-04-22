@@ -105,7 +105,7 @@ export function Level8({ onSuccess }: LevelProps) {
                       borderBottom: "1px solid #e2e8f0",
                     }}
                   >
-                    {["ID", "Username", "Password Hash (MD5)", "Algorithm"].map(
+                    {["ID", "Username", "Password Hash", "Algorithm"].map(
                       (h) => (
                         <th
                           key={h}

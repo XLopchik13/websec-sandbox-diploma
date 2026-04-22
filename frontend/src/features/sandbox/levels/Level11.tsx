@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import searchIcon from "@/assets/search.svg";
+import downloadIcon from "@/assets/download.svg";
+import userIcon from "@/assets/user.svg";
+import calendarIcon from "@/assets/calendar.svg";
+import alertIcon from "@/assets/alert.svg";
 import styles from "./Level11.module.scss";
 
 interface LevelProps {
@@ -71,7 +76,7 @@ export function Level11({ onSuccess }: LevelProps) {
               }}
             >
               <div className={styles.searchBar}>
-                <span className={styles.searchIcon}>🔍</span>
+                <img src={searchIcon} alt="" className={styles.searchIcon} />
                 chart
               </div>
 
@@ -99,13 +104,39 @@ export function Level11({ onSuccess }: LevelProps) {
                     </div>
                     <div className={styles.packageDesc}>{pkg.description}</div>
                     <div className={styles.packageMeta}>
-                      <span>⬇ {pkg.downloads}</span>
-                      <span>👤 {pkg.author}</span>
-                      <span>📅 {pkg.published}</span>
+                      <span className={styles.metaItem}>
+                        <img
+                          src={downloadIcon}
+                          alt=""
+                          className={styles.metaIcon}
+                        />
+                        {pkg.downloads}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <img
+                          src={userIcon}
+                          alt=""
+                          className={styles.metaIcon}
+                        />
+                        {pkg.author}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <img
+                          src={calendarIcon}
+                          alt=""
+                          className={styles.metaIcon}
+                        />
+                        {pkg.published}
+                      </span>
                     </div>
                     {pkg.postinstall && (
                       <div className={styles.postinstallWarning}>
-                        ⚠ postinstall: {pkg.postinstall}
+                        <img
+                          src={alertIcon}
+                          alt=""
+                          className={styles.metaIcon}
+                        />{" "}
+                        postinstall: {pkg.postinstall}
                       </div>
                     )}
                     {selected === pkg.name && (

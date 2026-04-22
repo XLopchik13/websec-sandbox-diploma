@@ -125,8 +125,8 @@ export function Level10({ onSuccess }: LevelProps) {
               </div>
               {lastTransfer && (
                 <div className={styles.transferAlert}>
-                  ⚠ Последний перевод: <strong>{lastTransfer.amount} ₽</strong>{" "}
-                  → <code>{lastTransfer.to}</code>
+                  История списаний: <strong>{lastTransfer.amount}₽</strong>{" "}
+                  отправлено клиенту другого банка
                 </div>
               )}
               <div
