@@ -7,6 +7,7 @@ interface AppHeaderProps {
   total: number;
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  onHome: () => void;
   onLogout: () => void;
   onProfile: () => void;
   onResetProgress: () => void;
@@ -18,6 +19,7 @@ export function AppHeader({
   total,
   sidebarOpen,
   onToggleSidebar,
+  onHome,
   onLogout,
   onProfile,
   onResetProgress,
@@ -47,7 +49,9 @@ export function AppHeader({
           <span className={styles.toggleLine} />
           <span className={styles.toggleLine} />
         </button>
-        <span className={styles.logo}>WEBSEC</span>
+        <button className={styles.logo} onClick={onHome}>
+          WEBSEC
+        </button>
       </div>
 
       <div className={styles.right} ref={menuRef}>

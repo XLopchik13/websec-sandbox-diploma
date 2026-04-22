@@ -195,6 +195,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         total={levels.length}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
+        onHome={() => setView({ kind: "welcome" })}
         onLogout={onLogout}
         onProfile={() => setView({ kind: "profile" })}
         onResetProgress={handleResetProgress}
