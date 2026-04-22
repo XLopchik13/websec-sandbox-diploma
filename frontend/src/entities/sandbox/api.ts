@@ -229,4 +229,33 @@ export const sandboxApi = {
       { headers: { Authorization: `Bearer ${token}` } },
     );
   },
+
+  // Level 11 — Supply Chain
+  supplyChainPackages: async (token: string) => {
+    return apiClient.get<
+      Array<{
+        name: string;
+        version: string;
+        downloads: string;
+        description: string;
+        author: string;
+        published: string;
+        verified: boolean;
+        postinstall: string | null;
+      }>
+    >("/sandbox/levels/11/packages", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+  supplyChainInstall: async (token: string, package_name: string) => {
+    return apiClient.post<{
+      output: string;
+      malicious: boolean;
+      success: boolean;
+    }>(
+      "/sandbox/levels/11/install",
+      { package_name },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
 };
