@@ -1,17 +1,17 @@
 @use "@/shared/styles" as *;
 
 .sidebar {
-  max-width: 400px;
+  width: 260px;
   flex-shrink: 0;
   background: #fff;
   border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: max-width 0.2s ease;
+  transition: width 0.2s ease;
 
   &.closed {
-    max-width: 0;
+    width: 0;
   }
 }
 

@@ -23,6 +23,11 @@
   background: $color-bg-white;
 }
 
+.centered {
+  padding-right: var(--sidebar-w, 0px);
+  transition: padding-right 0.2s ease;
+}
+
 .welcome {
   display: flex;
   flex-direction: column;
