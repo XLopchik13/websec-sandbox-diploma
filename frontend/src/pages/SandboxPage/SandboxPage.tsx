@@ -65,11 +65,15 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
     try {
       const resetApi = LEVEL_RESET_APIS[id];
       if (resetApi) await resetApi(token);
+    } catch (err) {
+      console.error("Failed to reset level backend state", err);
+    }
+    setResetKey((k) => k + 1);
+    try {
       await sandboxApi.uncompleteLevel(token, id);
       setCompletedLevels((prev) => prev.filter((l) => l !== id));
-      setResetKey((k) => k + 1);
     } catch (err) {
-      console.error("Failed to reset level", err);
+      console.error("Failed to uncomplete level", err);
     }
   };
 
@@ -174,7 +178,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
             <p>{selectedLevel.description}</p>
             <ResetLevelButton
               onClick={() => handleLevelReset(selectedLevel.id)}
-              style={{ marginTop: "16px" }}
+              className={styles.resetBtn}
             />
           </div>
         </div>
@@ -194,9 +198,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
         onLogout={onLogout}
         onProfile={() => setView({ kind: "profile" })}
-        onResetProgress={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        onResetProgress={handleResetProgress}
       />
       <div className={styles.body}>
         <Sidebar
