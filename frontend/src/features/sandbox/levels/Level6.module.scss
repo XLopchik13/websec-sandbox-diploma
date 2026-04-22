@@ -60,6 +60,13 @@
   letter-spacing: 0.5px;
 }
 
+.fileIcon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
 .fileItem {
   display: flex;
   align-items: center;

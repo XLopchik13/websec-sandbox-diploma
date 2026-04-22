@@ -1,12 +1,314 @@
 @use "@/shared/styles" as *;
 
+.devtoolsLayout {
+  display: flex;
+  height: 100%;
+}
+
+.dtSidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #252526;
+  border-right: 1px solid $color-border-dark;
+  padding: 8px 0;
+  font-size: $font-size-sm;
+  overflow-y: auto;
+}
+
+.dtSidebarSection {
+  color: $color-devtools-muted;
+  padding: 2px 12px;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.dtSidebarItem {
+  color: $color-devtools-muted;
+  padding: 3px 12px 3px 20px;
+}
+
+.dtSidebarItemActive {
+  padding: 3px 12px 3px 32px;
+  color: $color-text-white;
+  background: $color-devtools-accent;
+  cursor: default;
+}
+
+.dtSidebarItemSub {
+  color: $color-devtools-muted;
+  padding: 3px 12px 3px 20px;
+  margin-top: 2px;
+}
+
+.dtMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dtTableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #2d2d2d;
+  border-bottom: 1px solid $color-border-dark;
+  padding: 4px 12px;
+}
+
+.dtTableHeaderCell {
+  font-size: $font-size-xs;
+  color: $color-devtools-muted;
+  font-weight: $font-weight-semibold;
+}
+
+.dtTableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px 12px;
+  cursor: pointer;
+  background: transparent;
+  border-bottom: 1px solid #2a2a2a;
+
+  &.selected {
+    background: $color-devtools-accent;
+  }
+}
+
+.dtRowKey {
+  font-size: $font-size-sm;
+  color: $color-devtools-string;
+  font-family: $font-mono;
+
+  .selected & {
+    color: $color-text-white;
+  }
+}
+
+.dtRowValue {
+  font-size: $font-size-sm;
+  color: $color-devtools-number;
+  font-family: $font-mono;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .selected & {
+    color: $color-text-light;
+  }
+}
+
+.dtEditor {
+  flex: 1;
+  border-top: 1px solid $color-border-dark;
+  background: #1e1e1e;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dtEditorLabel {
+  font-size: $font-size-xs;
+  color: $color-devtools-muted;
+  font-weight: $font-weight-semibold;
+}
+
+.dtEditorKey {
+  color: $color-devtools-string;
+  font-family: $font-mono;
+}
+
+.dtTextarea {
+  width: 100%;
+  background: #0d0d0d;
+  border: 1px solid $color-border-dark;
+  border-radius: 4px;
+  color: $color-devtools-number;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  padding: 6px 8px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.page {
+  background: $color-slate-100;
+  min-height: 240px;
+}
+
+.pageContent {
+  padding: 24px 20px;
+}
+
+.loadingText {
+  color: $color-text-muted;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.welcomeTitle {
+  font-size: 18px;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: 4px;
+}
+
+.accessLevel {
+  color: $color-text-secondary;
+  font-size: $font-size-base;
+}
+
+.userBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: $color-slate-900;
+  border-radius: 8px;
+}
+
+.userAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: $color-indigo;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.userName {
+  color: $color-border-light;
+  font-size: $font-size-base;
+}
+
+.userRole {
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+}
+
+.tilesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tile {
+  background: $color-bg-white;
+  border: 1px solid $color-border-light;
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 1px 3px $shadow-sm;
+}
+
+.tileIconWrap {
+  margin-bottom: 8px;
+}
+
+.tileIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+}
+
+.tileLabel {
+  font-size: $font-size-sm;
+  color: $color-text-body;
+  font-weight: $font-weight-semibold;
+}
+
+.adminTile {
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 1px 3px $shadow-sm;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background: $color-bg-white;
+  border: 1px solid $color-border-light;
+
+  &.success {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+
+  &.error {
+    border-color: $color-danger-border;
+  }
+
+  &.busy {
+    cursor: default;
+  }
+}
+
+.adminTileLabel {
+  font-size: $font-size-sm;
+  color: $color-text-body;
+  font-weight: $font-weight-semibold;
+
+  .success & {
+    color: $color-success;
+  }
+}
+
+.adminTileStatus {
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  margin-top: 2px;
+
+  .success & {
+    color: $color-success;
+  }
+
+  .error & {
+    color: $color-danger;
+  }
+}
+
+.successBox {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: $font-size-base;
+  color: #166534;
+}
+
+.successTitle {
+  font-weight: $font-weight-bold;
+  margin-bottom: 4px;
+}
+
+.successSecret {
+  font-family: $font-mono;
+}
+
 .saveBtn {
   background: $color-blue;
   margin-top: 0;
   border-radius: 3px;
   padding: 5px 14px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
 
   &:hover:not(:disabled) {
     background: $color-blue-hover;
@@ -23,7 +325,7 @@
   margin-top: 0;
   border-radius: 3px;
   padding: 5px 14px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
   cursor: default;
 }

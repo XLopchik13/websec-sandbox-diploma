@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import articleIcon from "@/assets/article.svg";
+import editDocumentIcon from "@/assets/edit_document.svg";
+import descriptionIcon from "@/assets/description.svg";
 import styles from "./Level6.module.scss";
 
 interface LevelProps {
@@ -9,10 +12,18 @@ interface LevelProps {
 }
 
 const LISTED_FILES = [
-  { name: "readme.txt", label: "readme.txt", icon: "📄" },
-  { name: "notes.txt", label: "notes.txt", icon: "📝" },
-  { name: "reports/q1-2025.txt", label: "reports/q1-2025.txt", icon: "📊" },
-  { name: "reports/q2-2025.txt", label: "reports/q2-2025.txt", icon: "📊" },
+  { name: "readme.txt", label: "readme.txt", icon: articleIcon },
+  { name: "notes.txt", label: "notes.txt", icon: editDocumentIcon },
+  {
+    name: "reports/q1-2025.txt",
+    label: "reports/q1-2025.txt",
+    icon: descriptionIcon,
+  },
+  {
+    name: "reports/q2-2025.txt",
+    label: "reports/q2-2025.txt",
+    icon: descriptionIcon,
+  },
 ];
 
 export function Level6({ onSuccess }: LevelProps) {
@@ -59,7 +70,7 @@ export function Level6({ onSuccess }: LevelProps) {
                   className={`${styles.fileItem} ${filename === f.name ? styles.active : ""}`}
                   onClick={() => fetchFile(f.name)}
                 >
-                  <span>{f.icon}</span>
+                  <img src={f.icon} alt="" className={styles.fileIcon} />
                   <span>{f.label}</span>
                 </button>
               ))}
