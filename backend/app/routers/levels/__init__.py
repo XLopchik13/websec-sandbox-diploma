@@ -11,6 +11,7 @@ from app.routers.levels import (
     level8_crypto,
     level9_cmdi,
     level10_csrf,
+    level11_supply_chain,
     levels_catalog,
 )
 
@@ -27,3 +28,4 @@ router.include_router(level7_misconfig.router)
 router.include_router(level8_crypto.router)
 router.include_router(level9_cmdi.router)
 router.include_router(level10_csrf.router)
+router.include_router(level11_supply_chain.router)

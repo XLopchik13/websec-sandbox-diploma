@@ -1,0 +1,239 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.browserRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.registryCol {
+  flex: 1;
+  min-width: 0;
+}
+
+.terminalCol {
+  width: 420px;
+  flex-shrink: 0;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.searchIcon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.packageList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.packageCard {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+  position: relative;
+
+  &:hover {
+    border-color: #94a3b8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  &.malicious {
+    border-color: #fecaca;
+    background: #fff9f9;
+
+    &:hover {
+      border-color: #f87171;
+    }
+  }
+
+  &.selected {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.packageHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.packageName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: monospace;
+}
+
+.packageVersion {
+  font-size: 11px;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.verifiedBadge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  color: #16a34a;
+  background: #dcfce7;
+  border-radius: 4px;
+  padding: 2px 6px;
+  letter-spacing: 0.02em;
+}
+
+.packageDesc {
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.packageMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.postinstallWarning {
+  margin-top: 10px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #92400e;
+  font-family: monospace;
+}
+
+.installBtn {
+  margin-top: 10px;
+  font-size: 12px;
+  padding: 6px 14px;
+  background: #cb3837;
+  font-family: monospace;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: #a82e2d;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.terminal {
+  background: #0f172a;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 340px;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+.terminalDots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminalTitle {
+  font-size: 11px;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.terminalBody {
+  padding: 16px;
+  min-height: 300px;
+}
+
+.terminalPrompt {
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  color: #94a3b8;
+  margin-bottom: 8px;
+
+  span {
+    color: #4ade80;
+    font-weight: 700;
+  }
+}
+
+.terminalOutput {
+  margin: 0;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.8;
+}
+
+.terminalOutputMalicious {
+  @extend .terminalOutput;
+
+  .exfil {
+    color: #f87171;
+    font-weight: 700;
+  }
+}
+
+.terminalPlaceholder {
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  color: #334155;
+  line-height: 1.7;
+}
+
+.successBanner {
+  margin-top: 12px;
+  background: #fef9c3;
+  border: 1px solid #fde047;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #713f12;
+  line-height: 1.6;
+
+  strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #92400e;
+  }
+}
