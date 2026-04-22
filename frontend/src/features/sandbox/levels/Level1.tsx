@@ -88,220 +88,123 @@ export function Level1({ onSuccess }: LevelProps) {
   };
 
   return (
-    <div>
-      <div style={{ marginBottom: "20px" }}>
-        <BrowserWindow url="devblog.io/articles/web-security-2026#comments">
-          <div
-            style={{
-              background: "#f0f2f5",
-              overflow: "hidden",
-              minHeight: "420px",
-            }}
-          >
-            <div
-              style={{
-                background: "linear-gradient(135deg, #16213e 0%, #0f3460 100%)",
-                padding: "28px 32px 24px",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "11px",
-                  color: "#7c83a0",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  marginBottom: "10px",
-                }}
-              >
-                DevBlog · Безопасность
-              </div>
-              <h2
-                style={{
-                  color: "#e2e8f0",
-                  fontSize: "22px",
-                  fontWeight: "700",
-                  margin: "0 0 12px",
-                  lineHeight: "1.3",
-                }}
-              >
-                Топ-10 уязвимостей веб-приложений в 2026 году
-              </h2>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "16px",
-                  color: "#7c83a0",
-                  fontSize: "13px",
-                }}
-              >
-                <span>✍️ sec_researcher</span>
-                <span>📅 18 апр 2026</span>
-                <span>⏱ 5 мин чтения</span>
-              </div>
-            </div>
-
-            <div style={{ background: "#fff", padding: "24px 32px" }}>
-              <form onSubmit={handleSubmit} style={{ marginBottom: "28px" }}>
-                <div
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "600",
-                    color: "#555",
-                    marginBottom: "8px",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                  }}
-                >
-                  Оставить комментарий
-                </div>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Поделитесь мыслями..."
-                  disabled={loading}
-                  rows={3}
-                  style={{
-                    width: "100%",
-                    background: "#f8f9fa",
-                    border: "1px solid #dee2e6",
-                    borderRadius: "8px",
-                    color: "#1a1a1a",
-                    padding: "12px 14px",
-                    fontSize: "14px",
-                    resize: "vertical",
-                    outline: "none",
-                    boxSizing: "border-box",
-                  }}
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "8px",
-                  }}
-                >
-                  <Button
-                    type="submit"
-                    disabled={loading || !comment.trim()}
-                    className={styles.submitBtn}
-                  >
-                    {loading ? "Публикация..." : "Опубликовать"}
-                  </Button>
-                </div>
-              </form>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "16px",
-                  paddingBottom: "12px",
-                  borderBottom: "2px solid #f0f2f5",
-                }}
-              >
-                <div
-                  style={{
-                    color: "#1a1a1a",
-                    fontSize: "15px",
-                    fontWeight: "700",
-                  }}
-                >
-                  Комментарии ({comments.length})
-                </div>
-                {comments.length > 0 && (
-                  <Button
-                    variant="ghost"
-                    onClick={handleClear}
-                    className={styles.clearBtn}
-                  >
-                    Очистить
-                  </Button>
-                )}
-              </div>
-
-              {comments.length === 0 ? (
-                <div
-                  style={{
-                    color: "#adb5bd",
-                    textAlign: "center",
-                    padding: "24px 0",
-                    fontSize: "14px",
-                  }}
-                >
-                  Будьте первым, кто оставит комментарий
-                </div>
-              ) : (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: "0" }}
-                >
-                  {comments.map((c) => (
-                    <div
-                      key={c.id}
-                      style={{
-                        display: "flex",
-                        gap: "12px",
-                        padding: "16px 0",
-                        borderBottom: "1px solid #f0f2f5",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "38px",
-                          height: "38px",
-                          borderRadius: "50%",
-                          background: getAvatarColor(c.user_id),
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "13px",
-                          fontWeight: "700",
-                          color: "#fff",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {getInitials(c.user_id)}
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "10px",
-                            alignItems: "baseline",
-                            marginBottom: "6px",
-                          }}
-                        >
-                          <span
-                            style={{
-                              color: "#1a1a1a",
-                              fontSize: "14px",
-                              fontWeight: "600",
-                            }}
-                          >
-                            user_{c.user_id}
-                          </span>
-                          <span style={{ color: "#adb5bd", fontSize: "12px" }}>
-                            {formatDate(c.created_at)}
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            color: "#495057",
-                            fontSize: "14px",
-                            lineHeight: "1.6",
-                            textAlign: "left",
-                          }}
-                          dangerouslySetInnerHTML={{ __html: c.content }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+    <div className={styles.wrapper}>
+      <BrowserWindow url="devblog.io/articles/web-security-2026#comments">
+        <div>
+          <div className={styles.hero}>
+            <div className={styles.heroCategory}>DevBlog · Безопасность</div>
+            <h2 className={styles.heroTitle}>
+              Топ-10 уязвимостей веб-приложений
+            </h2>
+            <div className={styles.heroMeta}>
+              <span>Дата публикации: 18 апр 2026</span>
             </div>
           </div>
-        </BrowserWindow>
-      </div>
+
+          <div className={styles.body}>
+            <form onSubmit={handleSubmit} className={styles.commentForm}>
+              <p className={styles.intro}>
+                OWASP выпустил топ-10 самых актуальных категорий рисков и
+                веб-атак за последние 5 лет:
+              </p>
+              <ol>
+                <li>
+                  Broken access control (BAC) — нарушение контроля доступа.
+                </li>
+                <li>
+                  Security misconfiguration — нарушение безопасности
+                  конфигураций.
+                </li>
+                <li>
+                  Software supply chain failures — уязвимости в цепочке
+                  поставок.
+                </li>
+                <li>Cryptographic failures — криптографические уязвимости.</li>
+                <li>Injection — инъекции.</li>
+                <li>Insecure design — небезопасное проектирование.</li>
+                <li>Authentication failures — сбои аутентификации.</li>
+                <li>
+                  Software or data integrity failures — сбои в обеспечении
+                  целостности ПО и данных.
+                </li>
+                <li>
+                  Logging and alerting failures — сбои логирования и оповещения.
+                </li>
+                <li>
+                  Mishandling or exceptional conditions — неправильная обработка
+                  исключительных условий.
+                </li>
+              </ol>
+              <div className={styles.commentLabel}>Оставить комментарий</div>
+              <textarea
+                className={styles.textarea}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Поделитесь мыслями..."
+                disabled={loading}
+                rows={3}
+              />
+              <div className={styles.submitRow}>
+                <Button
+                  type="submit"
+                  disabled={loading || !comment.trim()}
+                  className={styles.submitBtn}
+                >
+                  {loading ? "Публикация..." : "Опубликовать"}
+                </Button>
+              </div>
+            </form>
+
+            <div className={styles.commentsHeader}>
+              <div className={styles.commentsCount}>
+                Комментарии ({comments.length})
+              </div>
+              {comments.length > 0 && (
+                <Button
+                  variant="ghost"
+                  onClick={handleClear}
+                  className={styles.clearBtn}
+                >
+                  Очистить
+                </Button>
+              )}
+            </div>
+
+            {comments.length === 0 ? (
+              <div className={styles.empty}>
+                Будьте первым, кто оставит комментарий
+              </div>
+            ) : (
+              <div>
+                {comments.map((c) => (
+                  <div key={c.id} className={styles.commentItem}>
+                    <div
+                      className={styles.avatar}
+                      style={{ background: getAvatarColor(c.user_id) }}
+                    >
+                      {getInitials(c.user_id)}
+                    </div>
+                    <div>
+                      <div className={styles.commentMeta}>
+                        <span className={styles.commentAuthor}>
+                          user_{c.user_id}
+                        </span>
+                        <span className={styles.commentDate}>
+                          {formatDate(c.created_at)}
+                        </span>
+                      </div>
+                      <div
+                        className={styles.commentContent}
+                        dangerouslySetInnerHTML={{ __html: c.content }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </BrowserWindow>
     </div>
   );
 }
