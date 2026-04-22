@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Button } from "@/shared/ui/Button/Button";
+import { useState, useEffect } from "react";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
+import searchIcon from "@/assets/search.svg";
 import styles from "./Level2.module.scss";
 
 interface LevelProps {
@@ -14,12 +14,6 @@ interface Account {
   role: string;
 }
 
-const ROLE_BADGE: Record<string, { bg: string; color: string }> = {
-  admin: { bg: "#fee2e2", color: "#dc2626" },
-  moderator: { bg: "#fef3c7", color: "#d97706" },
-  user: { bg: "#dbeafe", color: "#2563eb" },
-};
-
 const NAVBAR = [
   { label: "Главная" },
   { label: "Сотрудники", active: true },
@@ -27,244 +21,119 @@ const NAVBAR = [
   { label: "Отчёты" },
 ];
 
+const badgeClass: Record<string, string> = {
+  admin: styles.badgeAdmin,
+  moderator: styles.badgeModerator,
+  user: styles.badgeUser,
+};
+
 export function Level2({ onSuccess }: LevelProps) {
   const [username, setUsername] = useState("");
   const [results, setResults] = useState<Account[]>([]);
+  const [dbError, setDbError] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!token || !username.trim()) return;
-    setLoading(true);
-    try {
-      const data = await sandboxApi.sqliSearch(token, username);
+  useEffect(() => {
+    if (!token) return;
+    sandboxApi.sqliEmployees(token).then((data) => {
       setResults(data);
       setSearched(true);
-      if (data.some((r) => r.role === "admin")) onSuccess();
-    } finally {
-      setLoading(false);
+    });
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+    if (!username.trim()) {
+      sandboxApi.sqliEmployees(token).then((data) => setResults(data));
+      return;
     }
-  };
+    const timer = setTimeout(async () => {
+      try {
+        const data = await sandboxApi.sqliSearch(token, username);
+        setDbError(false);
+        setResults(data);
+        const isCompleteInjection =
+          /['"]/.test(username) && /(--|#)/.test(username);
+        if (isCompleteInjection && data.some((r) => r.role === "admin"))
+          onSuccess();
+      } catch {
+        setDbError(true);
+        setResults([]);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [username, token, onSuccess]);
 
   return (
-    <div>
-      <div style={{ marginBottom: "20px" }}>
-        <BrowserWindow
-          url="hr.corp-internal.io/employees/search"
-          appName="HR Portal"
-          appColor="#2563eb"
-          navbar={NAVBAR}
-        >
-          <div
-            style={{
-              background: "#f8fafc",
-              padding: "24px",
-              minHeight: "420px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "20px",
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "700",
-                    color: "#0f172a",
-                  }}
-                >
-                  База сотрудников
-                </div>
-                <div
-                  style={{
-                    fontSize: "13px",
-                    color: "#64748b",
-                    marginTop: "2px",
-                  }}
-                >
-                  Поиск по имени пользователя
-                </div>
+    <div className={styles.wrapper}>
+      <BrowserWindow
+        url="hr.corp-internal.io/employees/search"
+        appName="HR Portal"
+        appColor="#2563eb"
+        navbar={NAVBAR}
+      >
+        <div className={styles.page}>
+          <div className={styles.pageHeader}>
+            <div>
+              <div className={styles.pageTitle}>База сотрудников</div>
+              <div className={styles.pageSubtitle}>
+                Поиск по имени пользователя
               </div>
             </div>
-
-            <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  background: "#fff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "8px",
-                  padding: "6px 12px",
-                  alignItems: "center",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-                }}
-              >
-                <span style={{ color: "#94a3b8", fontSize: "16px" }}>🔍</span>
-                <input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Поиск по имени сотрудника..."
-                  disabled={loading}
-                  style={{
-                    flex: 1,
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    color: "#0f172a",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                  }}
-                />
-                <Button
-                  type="submit"
-                  disabled={loading || !username.trim()}
-                  className={styles.searchBtn}
-                >
-                  {loading ? "..." : "Найти"}
-                </Button>
-              </div>
-            </form>
-
-            {searched && (
-              <div
-                style={{
-                  background: "#fff",
-                  borderRadius: "8px",
-                  border: "1px solid #e2e8f0",
-                  overflow: "hidden",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "12px 16px",
-                    borderBottom: "1px solid #f1f5f9",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    background: "#f8fafc",
-                  }}
-                >
-                  <span style={{ color: "#64748b", fontSize: "13px" }}>
-                    Найдено: {results.length}
-                  </span>
-                </div>
-
-                {results.length === 0 ? (
-                  <div
-                    style={{
-                      color: "#94a3b8",
-                      textAlign: "center",
-                      padding: "40px 0",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Сотрудники не найдены
-                  </div>
-                ) : (
-                  <table
-                    style={{
-                      width: "100%",
-                      borderCollapse: "collapse",
-                      fontSize: "13px",
-                    }}
-                  >
-                    <thead>
-                      <tr style={{ background: "#f8fafc" }}>
-                        {["ID", "Имя пользователя", "Роль"].map((h) => (
-                          <th
-                            key={h}
-                            style={{
-                              textAlign: "left",
-                              padding: "10px 16px",
-                              color: "#64748b",
-                              fontWeight: "600",
-                              textTransform: "uppercase",
-                              fontSize: "11px",
-                              letterSpacing: "0.5px",
-                              borderBottom: "1px solid #e2e8f0",
-                            }}
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {results.map((r) => {
-                        const badge = ROLE_BADGE[r.role] ?? ROLE_BADGE.user;
-                        return (
-                          <tr
-                            key={r.id}
-                            style={{
-                              borderBottom: "1px solid #f1f5f9",
-                              background:
-                                r.role === "admin"
-                                  ? "rgba(254,226,226,0.4)"
-                                  : "transparent",
-                            }}
-                          >
-                            <td
-                              style={{ padding: "12px 16px", color: "#94a3b8" }}
-                            >
-                              {r.id}
-                            </td>
-                            <td
-                              style={{
-                                padding: "12px 16px",
-                                color: "#0f172a",
-                                fontWeight: "500",
-                              }}
-                            >
-                              {r.username}
-                            </td>
-                            <td style={{ padding: "12px 16px" }}>
-                              <span
-                                style={{
-                                  background: badge.bg,
-                                  color: badge.color,
-                                  padding: "2px 8px",
-                                  borderRadius: "4px",
-                                  fontSize: "11px",
-                                  fontWeight: "600",
-                                  textTransform: "uppercase",
-                                }}
-                              >
-                                {r.role}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            )}
-
-            {!searched && (
-              <div
-                style={{
-                  color: "#cbd5e1",
-                  textAlign: "center",
-                  padding: "40px 0",
-                  fontSize: "13px",
-                }}
-              >
-                Введите имя для поиска по базе сотрудников
-              </div>
-            )}
           </div>
-        </BrowserWindow>
-      </div>
+
+          <div className={styles.searchBox}>
+            <img src={searchIcon} className={styles.searchIcon} alt="" />
+            <input
+              className={styles.searchInput}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Поиск по имени сотрудника..."
+            />
+          </div>
+
+          {searched && (
+            <div className={styles.resultsBox}>
+              <div className={styles.resultsHeader}>
+                {dbError ? "Ошибка запроса" : `Найдено: ${results.length}`}
+              </div>
+              {dbError ? (
+                <div className={styles.dbError}>500 Internal Server Error</div>
+              ) : results.length === 0 ? (
+                <div className={styles.empty}>Сотрудники не найдены</div>
+              ) : (
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      {["ID", "Имя пользователя", "Роль"].map((h) => (
+                        <th key={h} className={styles.th}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {results.map((r) => (
+                      <tr key={r.id} className={styles.tr}>
+                        <td className={styles.cellId}>{r.id}</td>
+                        <td className={styles.cellName}>{r.username}</td>
+                        <td className={styles.cellRole}>
+                          <span
+                            className={`${styles.badge} ${badgeClass[r.role] ?? styles.badgeUser}`}
+                          >
+                            {r.role}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
+        </div>
+      </BrowserWindow>
     </div>
   );
 }

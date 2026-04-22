@@ -84,7 +84,6 @@ export function BrowserWindow({
               ?.select();
           }}
         >
-          <span className={styles.addressLock}>🔒</span>
           <input
             className={styles.addressInput}
             value={inputUrl}

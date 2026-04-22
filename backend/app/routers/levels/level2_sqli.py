@@ -10,6 +10,15 @@ from app.schemas.sqli import SqliAccountSchema
 router = APIRouter()
 
 
+@router.get("/levels/2/employees", response_model=list[SqliAccountSchema])
+async def sqli_employees(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    await crud_sqli.ensure_seeded(db)
+    return await crud_sqli.get_all_accounts(db)
+
+
 @router.get("/levels/2/search", response_model=list[SqliAccountSchema])
 async def sqli_search(
     username: str,
