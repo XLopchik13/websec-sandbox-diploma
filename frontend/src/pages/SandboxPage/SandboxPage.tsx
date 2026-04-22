@@ -1,10 +1,10 @@
 import { useState, useEffect, type CSSProperties } from "react";
-import { Button } from "@/shared/ui/Button/Button";
 import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
 import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
 import type { User } from "@/entities/user/types";
+import { ChangePasswordModal } from "@/features/auth/ChangePasswordModal/ChangePasswordModal";
 import { AppHeader } from "./AppHeader";
 import { Sidebar } from "./Sidebar";
 import { CategoryTheory } from "./CategoryTheory";
@@ -20,8 +20,7 @@ const LEVEL_RESET_APIS: Record<string, (token: string) => Promise<unknown>> = {
 type View =
   | { kind: "welcome" }
   | { kind: "theory"; category: string }
-  | { kind: "practice"; levelId: string }
-  | { kind: "profile" };
+  | { kind: "practice"; levelId: string };
 
 interface SandboxPageProps {
   user: User;
@@ -35,6 +34,8 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   const [view, setView] = useState<View>({ kind: "welcome" });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+
   useEffect(() => {
     sandboxApi
       .getLevels(token)
@@ -115,35 +116,6 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
       );
     }
 
-    if (view.kind === "profile") {
-      return (
-        <div className={styles.profileView}>
-          <h2>Профиль</h2>
-          <div className={styles.profileCard}>
-            <p>
-              <strong>Имя пользователя:</strong> {user.username}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
-          </div>
-          <div className={styles.profileSection}>
-            <h3>Изменить пароль</h3>
-            <p className={styles.comingSoon}>Функция в разработке.</p>
-          </div>
-          <div className={styles.profileSection}>
-            <h3>Прогресс</h3>
-            <p className={styles.comingSoon}>
-              Решено уровней: {completedLevels.length} / {levels.length}
-            </p>
-            <Button variant="danger" onClick={handleResetProgress}>
-              Сбросить прогресс
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
     if (view.kind === "theory") {
       const categoryLevels = levels.filter((l) => l.category === view.category);
       return (
@@ -196,7 +168,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
         onHome={() => setView({ kind: "welcome" })}
         onLogout={onLogout}
-        onProfile={() => setView({ kind: "profile" })}
+        onChangePassword={() => setChangePasswordOpen(true)}
         onResetProgress={handleResetProgress}
       />
       <div className={styles.body}>
@@ -219,6 +191,12 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
           {renderContent()}
         </main>
       </div>
+      {changePasswordOpen && (
+        <ChangePasswordModal
+          userEmail={user.email}
+          onClose={() => setChangePasswordOpen(false)}
+        />
+      )}
     </div>
   );
 }

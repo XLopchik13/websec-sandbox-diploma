@@ -1,6 +1,177 @@
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@use "@/shared/styles" as *;
+
+.page {
+  position: relative;
   min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-white;
+}
+
+.preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  filter: blur(3px) saturate(0.7);
+  transform-origin: center;
+}
+
+.previewHeader {
+  height: 64px;
+  background: $color-bg-white;
+  border-bottom: 1px solid $color-border-light;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.previewHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.previewHamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  span {
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: $color-text-primary;
+    border-radius: 4px;
+    opacity: 0.4;
+  }
+}
+
+.previewLogo {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-extrabold;
+  color: $color-text-primary;
+  letter-spacing: -0.5px;
+}
+
+.previewAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: $color-slate-200;
+}
+
+.previewBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.previewSidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid $color-border-light;
+  background: $color-bg-white;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.previewCategory {
+  padding: 6px 10px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-text-muted;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+.previewItem {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: $font-size-sm;
+  color: $color-text-body;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.active {
+    background: $color-slate-100;
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.previewDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $color-border-light;
+  flex-shrink: 0;
+
+  .active & {
+    background: $color-primary;
+  }
+
+  &.done {
+    background: $color-success;
+  }
+}
+
+.previewMain {
+  flex: 1;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.previewHeading {
+  width: 260px;
+  height: 28px;
+  border-radius: 6px;
+  background: $color-slate-100;
+}
+
+.previewText {
+  width: 320px;
+  height: 14px;
+  border-radius: 4px;
+  background: $color-slate-100;
+
+  &:nth-child(3) {
+    width: 280px;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+.notice {
+  font-size: $font-size-base;
+  color: $color-text-body;
+  margin: 0 0 12px;
+  line-height: $line-height-base;
+}
+
+.backLink {
+  margin-top: 8px;
 }

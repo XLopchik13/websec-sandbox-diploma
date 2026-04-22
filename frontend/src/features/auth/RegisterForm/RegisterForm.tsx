@@ -34,7 +34,7 @@ export function RegisterForm({
         disabled={disabled}
       />
       <Input
-        label="Username"
+        label="Имя пользователя"
         type="text"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -42,7 +42,7 @@ export function RegisterForm({
         disabled={disabled}
       />
       <Input
-        label="Password"
+        label="Пароль"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -51,13 +51,13 @@ export function RegisterForm({
       />
 
       <Button type="submit" disabled={disabled} className={styles.submitButton}>
-        Register
+        Зарегистрироваться
       </Button>
 
       <div className={styles.switchLink}>
-        Have an account?{" "}
+        Уже есть аккаунт?{" "}
         <Button type="button" variant="link" onClick={onSwitchToLogin}>
-          Login
+          Войти
         </Button>
       </div>
     </form>

@@ -33,7 +33,7 @@ export function LoginForm({
         disabled={disabled}
       />
       <Input
-        label="Password"
+        label="Пароль"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -42,13 +42,13 @@ export function LoginForm({
       />
 
       <Button type="submit" disabled={disabled} className={styles.submitButton}>
-        Login
+        Войти
       </Button>
 
       <div className={styles.switchLink}>
-        No account?{" "}
+        Нет аккаунта?{" "}
         <Button type="button" variant="link" onClick={onSwitchToRegister}>
-          Register
+          Зарегистрироваться
         </Button>
       </div>
     </form>
