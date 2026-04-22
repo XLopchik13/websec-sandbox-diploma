@@ -18,36 +18,16 @@ function b64urlDecode(s: string): string {
   }
 }
 
-function b64urlEncode(s: string): string {
-  return btoa(unescape(encodeURIComponent(s)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-}
-
-function parseJwt(token: string): { header: object; payload: object } | null {
+function parseJwtPayload(token: string): Record<string, unknown> | null {
   try {
-    const [h, p] = token.split(".");
-    return {
-      header: JSON.parse(b64urlDecode(h)),
-      payload: JSON.parse(b64urlDecode(p)),
-    };
+    const p = token.split(".")[1];
+    return JSON.parse(b64urlDecode(p));
   } catch {
     return null;
   }
 }
 
-function buildToken(header: string, payload: string): string {
-  try {
-    JSON.parse(header);
-    JSON.parse(payload);
-    return `${b64urlEncode(header)}.${b64urlEncode(payload)}.`;
-  } catch {
-    return "";
-  }
-}
-
-type ApiResult =
+type VerifyResult =
   | {
       ok: true;
       data: { access: string; role: string; message: string; secret: string };
@@ -62,10 +42,11 @@ const ACCESS_TILES = [
 ];
 
 export function Level4({ onSuccess }: LevelProps) {
-  const [headerJson, setHeaderJson] = useState("");
-  const [payloadJson, setPayloadJson] = useState("");
+  const [savedToken, setSavedToken] = useState("");
+  const [editedToken, setEditedToken] = useState("");
   const [rowSelected, setRowSelected] = useState(false);
-  const [result, setResult] = useState<ApiResult | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
+  const [result, setResult] = useState<VerifyResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const authToken = localStorage.getItem("token");
@@ -75,23 +56,26 @@ export function Level4({ onSuccess }: LevelProps) {
     sandboxApi
       .jwtGetToken(authToken)
       .then(({ token }) => {
-        const parsed = parseJwt(token);
-        if (parsed) {
-          setHeaderJson(JSON.stringify(parsed.header, null, 2));
-          setPayloadJson(JSON.stringify(parsed.payload, null, 2));
-        }
+        setSavedToken(token);
+        setEditedToken(token);
       })
       .finally(() => setFetchLoading(false));
   }, [authToken]);
 
-  const constructedToken = buildToken(headerJson, payloadJson);
+  const handleSave = () => {
+    if (!editedToken.trim()) return;
+    setSavedToken(editedToken);
+    setResult(null);
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 1500);
+  };
 
-  const handleApply = async () => {
-    if (!authToken || !constructedToken) return;
+  const handleAdminPanel = async () => {
+    if (!authToken || !savedToken || loading) return;
     setLoading(true);
     setResult(null);
     try {
-      const data = await sandboxApi.jwtVerify(authToken, constructedToken);
+      const data = await sandboxApi.jwtVerify(authToken, savedToken);
       setResult({ ok: true, data });
       onSuccess();
     } catch (e: unknown) {
@@ -105,17 +89,9 @@ export function Level4({ onSuccess }: LevelProps) {
     }
   };
 
-  let payloadRole = "user";
-  try {
-    payloadRole = (JSON.parse(payloadJson) as { role?: string }).role ?? "user";
-  } catch {
-    /* empty */
-  }
-
+  const payloadRole = (parseJwtPayload(savedToken)?.role as string) ?? "user";
   const truncatedToken =
-    constructedToken.length > 48
-      ? constructedToken.slice(0, 48) + "…"
-      : constructedToken;
+    savedToken.length > 48 ? savedToken.slice(0, 48) + "…" : savedToken;
 
   const applicationSlot = (
     <div style={{ display: "flex", height: "100%" }}>
@@ -238,103 +214,43 @@ export function Level4({ onSuccess }: LevelProps) {
               borderTop: "1px solid #3c3c3c",
               background: "#1e1e1e",
               padding: "10px 12px",
-              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
             }}
           >
             <div
-              style={{
-                fontSize: "11px",
-                color: "#9d9d9d",
-                marginBottom: "8px",
-                fontWeight: 600,
-              }}
+              style={{ fontSize: "11px", color: "#9d9d9d", fontWeight: 600 }}
             >
-              Decoded:{" "}
               <span style={{ color: "#ce9178", fontFamily: "monospace" }}>
                 corp_session
               </span>
             </div>
-            <div
+            <textarea
+              value={editedToken}
+              onChange={(e) => setEditedToken(e.target.value)}
+              rows={5}
+              spellCheck={false}
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "10px",
-                marginBottom: "10px",
+                width: "100%",
+                background: "#0d0d0d",
+                border: "1px solid #3c3c3c",
+                borderRadius: "4px",
+                color: "#9cdcfe",
+                fontFamily: "monospace",
+                fontSize: "11px",
+                padding: "6px 8px",
+                resize: "vertical",
+                outline: "none",
+                boxSizing: "border-box",
               }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: "10px",
-                    color: "#f97316",
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    marginBottom: "4px",
-                  }}
-                >
-                  Header
-                </div>
-                <textarea
-                  value={headerJson}
-                  onChange={(e) => setHeaderJson(e.target.value)}
-                  rows={4}
-                  spellCheck={false}
-                  style={{
-                    width: "100%",
-                    background: "#0d0d0d",
-                    border: "1px solid #f9731640",
-                    borderRadius: "4px",
-                    color: "#f97316",
-                    fontFamily: "monospace",
-                    fontSize: "11px",
-                    padding: "6px 8px",
-                    resize: "none",
-                    outline: "none",
-                    boxSizing: "border-box",
-                  }}
-                />
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: "10px",
-                    color: "#9cdcfe",
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    marginBottom: "4px",
-                  }}
-                >
-                  Payload
-                </div>
-                <textarea
-                  value={payloadJson}
-                  onChange={(e) => setPayloadJson(e.target.value)}
-                  rows={4}
-                  spellCheck={false}
-                  style={{
-                    width: "100%",
-                    background: "#0d0d0d",
-                    border: "1px solid #9cdcfe40",
-                    borderRadius: "4px",
-                    color: "#9cdcfe",
-                    fontFamily: "monospace",
-                    fontSize: "11px",
-                    padding: "6px 8px",
-                    resize: "none",
-                    outline: "none",
-                    boxSizing: "border-box",
-                  }}
-                />
-              </div>
-            </div>
+            />
             <Button
-              onClick={handleApply}
-              disabled={loading || !constructedToken}
-              className={styles.saveBtn}
+              onClick={handleSave}
+              disabled={!editedToken.trim()}
+              className={justSaved ? styles.saveBtnSaved : styles.saveBtn}
             >
-              {loading ? "Отправка..." : "Save changes to localStorage"}
+              {justSaved ? "✓ Сохранено" : "Save changes to localStorage"}
             </Button>
           </div>
         )}
@@ -478,7 +394,7 @@ export function Level4({ onSuccess }: LevelProps) {
                     ))}
 
                     <div
-                      onClick={handleApply}
+                      onClick={loading ? undefined : handleAdminPanel}
                       style={{
                         background: result?.ok ? "#f0fdf4" : "#fff",
                         border: `1px solid ${result?.ok ? "#86efac" : result ? "#fecaca" : "#e2e8f0"}`,

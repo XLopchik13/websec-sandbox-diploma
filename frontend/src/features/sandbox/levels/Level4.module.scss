@@ -1,5 +1,7 @@
+@use "@/shared/styles" as *;
+
 .saveBtn {
-  background: #0e639c;
+  background: $color-blue;
   margin-top: 0;
   border-radius: 3px;
   padding: 5px 14px;
@@ -7,11 +9,21 @@
   font-weight: 500;
 
   &:hover:not(:disabled) {
-    background: #0c5484;
+    background: $color-blue-hover;
   }
 
   &:disabled {
     cursor: default;
     opacity: 0.6;
   }
+}
+
+.saveBtnSaved {
+  background: $color-success;
+  margin-top: 0;
+  border-radius: 3px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: default;
 }
