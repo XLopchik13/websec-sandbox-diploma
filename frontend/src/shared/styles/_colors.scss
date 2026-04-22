@@ -1,8 +1,8 @@
-// ── Brand ──────────────────────────────────────────────────────────────────
+// Brand
 $color-primary: #646cff;
 $color-primary-hover: #535bf2;
 
-// ── Blues (level buttons, links) ───────────────────────────────────────────
+// Blues (level buttons, links)
 $color-blue: #2563eb;
 $color-blue-hover: #1d4ed8;
 $color-blue-alt: #0d6efd;
@@ -10,7 +10,7 @@ $color-blue-alt-hover: #0b5ed7;
 $color-indigo: #6366f1;
 $color-indigo-hover: #4f46e5;
 
-// ── Status ─────────────────────────────────────────────────────────────────
+// Status
 $color-success: #16a34a;
 $color-success-hover: #15803d;
 
@@ -25,7 +25,7 @@ $color-warning: #ffcc00;
 
 $color-info: #4fc1ff;
 
-// ── Backgrounds ────────────────────────────────────────────────────────────
+// Backgrounds
 $color-bg-app: #242424;
 $color-bg-dark: #333;
 $color-bg-darker: #2b2b2b;
@@ -38,7 +38,7 @@ $color-bg-lighter: #f8fafc;
 $color-bg-code: #f1f5f9;
 $color-bg-ghost-hover: rgba(128, 128, 128, 0.08);
 
-// ── Slate scale (light UI surfaces) ───────────────────────────────────────
+// Slate scale (light UI surfaces)
 $color-slate-50: #f8fafc;
 $color-slate-100: #f1f5f9;
 $color-slate-200: #e2e8f0;
@@ -49,7 +49,7 @@ $color-slate-700: #374151;
 $color-slate-800: #1e293b;
 $color-slate-900: #0f172a;
 
-// ── Text ───────────────────────────────────────────────────────────────────
+// Text
 $color-text-primary: #0f172a;
 $color-text-body: #475569;
 $color-text-secondary: #64748b;
@@ -60,17 +60,17 @@ $color-text-white: #fff;
 $color-text-error: #dc2626;
 $color-text-near-black: #202124;
 
-// ── Borders ────────────────────────────────────────────────────────────────
+// Borders
 $color-border-light: #e2e8f0;
 $color-border-dark: #3c3c3c;
 $color-border-muted: #9d9d9d;
 
-// ── Shadows ────────────────────────────────────────────────────────────────
+// Shadows
 $shadow-sm: rgba(0, 0, 0, 0.1);
 $shadow-md: rgba(0, 0, 0, 0.15);
 $shadow-lg: rgba(0, 0, 0, 0.3);
 
-// ── DevTools syntax colors ─────────────────────────────────────────────────
+// DevTools syntax colors
 $color-devtools-info: #4fc1ff;
 $color-devtools-warn: #ffcc00;
 $color-devtools-string: #ce9178;

@@ -110,7 +110,6 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
     if (view.kind === "welcome") {
       return (
         <div className={styles.welcome}>
-          <div className={styles.welcomeIcon}>🔐</div>
           <h2>Добро пожаловать в WEBSEC</h2>
           <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
         </div>
