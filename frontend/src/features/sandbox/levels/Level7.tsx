@@ -64,9 +64,6 @@ export function Level7({ onSuccess }: LevelProps) {
               }}
             >
               <div className={styles.loginCard}>
-                <div className={styles.loginLogo}>
-                  <span style={{ fontSize: "28px" }}>🖥</span>
-                </div>
                 <div className={styles.loginTitle}>OpsWatch Monitor</div>
                 <div className={styles.loginVersion}>
                   v2.3.1 — Infrastructure Dashboard

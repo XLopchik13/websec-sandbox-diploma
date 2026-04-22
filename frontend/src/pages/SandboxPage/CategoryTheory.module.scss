@@ -1,5 +1,6 @@
 .root {
-  max-width: 760px;
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 .backBtn {
@@ -14,7 +15,7 @@
   font-size: 26px;
   font-weight: 800;
   color: #0f172a;
-  margin: 0 0 32px;
+  margin: 0 0 18px;
 }
 
 .theory {
@@ -23,7 +24,7 @@
   line-height: 1.8;
 
   section {
-    margin-bottom: 36px;
+    margin-bottom: 16px;
   }
 
   h2 {
@@ -35,6 +36,7 @@
 
   p {
     margin: 0 0 12px;
+    text-align: justify;
 
     &:last-child {
       margin-bottom: 0;
@@ -58,9 +60,8 @@
 }
 
 .levelCards {
-  margin-top: 40px;
   border-top: 1px solid #e2e8f0;
-  padding-top: 32px;
+  padding-top: 16px;
 }
 
 .practiceHeading {

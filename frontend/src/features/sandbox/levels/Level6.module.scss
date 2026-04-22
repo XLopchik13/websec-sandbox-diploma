@@ -1,3 +1,72 @@
+@use "@/shared/styles" as *;
+
+.wrapper {
+  margin-bottom: 20px;
+}
+
+.page {
+  background: $color-bg-lighter;
+  min-height: 420px;
+}
+
+.pageHeader {
+  background: $color-bg-white;
+  border-bottom: 1px solid $color-border-light;
+  padding: 12px 20px;
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.titleIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-base;
+  font-weight: $font-weight-extrabold;
+  color: $color-text-white;
+  background: $color-slate-800;
+  flex-shrink: 0;
+}
+
+.body {
+  display: flex;
+  height: calc(100% - 57px);
+  min-height: 363px;
+}
+
+.sidebar {
+  width: 220px;
+  border-right: 1px solid $color-border-light;
+  background: $color-bg-white;
+  padding: 12px 0;
+}
+
+.sidebarLabel {
+  padding: 4px 16px 8px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fileIcon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
 .fileItem {
   display: flex;
   align-items: center;
@@ -7,48 +76,59 @@
   background: none;
   border: none;
   padding: 6px 16px;
-  font-size: 13px;
-  color: #475569;
+  font-size: $font-size-base;
+  color: $color-text-body;
   cursor: pointer;
-  font-family: monospace;
+  font-family: $font-mono;
   transition: background 0.1s;
 
   &:hover {
-    background: #f1f5f9;
-    color: #0f172a;
+    background: $color-slate-100;
+    color: $color-text-primary;
   }
 
   &.active {
     background: #eff6ff;
-    color: #2563eb;
-    font-weight: 500;
+    color: $color-blue;
+    font-weight: $font-weight-medium;
   }
+}
+
+.contentArea {
+  flex: 1;
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .input {
   flex: 1;
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: $color-bg-white;
+  border: 1px solid $color-border-light;
   border-radius: 6px;
   padding: 6px 12px;
-  font-size: 13px;
-  font-family: monospace;
-  color: #0f172a;
+  font-size: $font-size-base;
+  font-family: $font-mono;
+  color: $color-text-primary;
   outline: none;
 
   &:focus {
-    border-color: #94a3b8;
+    border-color: $color-text-muted;
   }
 }
 
 .fetchBtn {
   margin: 0;
   padding: 6px 16px;
-  font-size: 13px;
-  background: #0f172a;
+  font-size: $font-size-base;
+  background: $color-slate-900;
 
   &:hover:not(:disabled) {
-    background: #1e293b;
+    background: $color-slate-800;
   }
 
   &:disabled {
@@ -57,21 +137,47 @@
   }
 }
 
-.errorBox {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+.emptyText {
+  color: $color-slate-500;
+  font-size: $font-size-base;
+  text-align: center;
+  padding-top: 16px;
+}
+
+.hint {
+  margin-top: 16px;
+  background: #fef9c3;
+  border: 1px solid #fde68a;
   border-radius: 6px;
   padding: 10px 14px;
-  font-size: 13px;
-  color: #dc2626;
+  font-size: $font-size-sm;
+  color: #78350f;
+}
+
+.hintTitle {
+  font-weight: $font-weight-bold;
+  margin-bottom: 4px;
+}
+
+.hintText {
+  margin-bottom: 4px;
+}
+
+.errorBox {
+  background: #fef2f2;
+  border: 1px solid $color-danger-border;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: $font-size-base;
+  color: $color-danger;
 
   code {
-    font-family: monospace;
+    font-family: $font-mono;
   }
 }
 
 .fileContent {
-  background: #0f172a;
+  background: $color-slate-900;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -81,29 +187,29 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  background: #1e293b;
-  font-size: 12px;
-  color: #94a3b8;
-  font-family: monospace;
+  background: $color-slate-800;
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  font-family: $font-mono;
   border-bottom: 1px solid #334155;
 }
 
 .traversalBadge {
-  background: #dc2626;
-  color: #fff;
-  font-size: 10px;
+  background: $color-danger;
+  color: $color-text-white;
+  font-size: $font-size-xs;
   padding: 2px 6px;
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .pre {
   margin: 0;
   padding: 14px;
-  font-size: 12px;
-  font-family: monospace;
-  color: #e2e8f0;
+  font-size: $font-size-sm;
+  font-family: $font-mono;
+  color: $color-slate-200;
   white-space: pre-wrap;
   word-break: break-all;
-  line-height: 1.6;
+  line-height: $line-height-base;
 }

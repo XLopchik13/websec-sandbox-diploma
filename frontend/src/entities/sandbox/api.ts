@@ -69,6 +69,12 @@ export const sandboxApi = {
   },
 
   // Level 2 — SQL Injection
+  sqliEmployees: async (token: string) => {
+    return apiClient.get<Array<{ id: number; username: string; role: string }>>(
+      "/sandbox/levels/2/employees",
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
   sqliSearch: async (token: string, username: string) => {
     return apiClient.get<Array<{ id: number; username: string; role: string }>>(
       `/sandbox/levels/2/search?username=${encodeURIComponent(username)}`,

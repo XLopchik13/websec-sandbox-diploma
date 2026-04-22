@@ -1,12 +1,72 @@
+@use "@/shared/styles" as *;
+
+.wrapper {
+  margin-bottom: 20px;
+}
+
+.page {
+  background: $color-slate-50;
+  padding: 24px;
+  min-height: 420px;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pageTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.pageSubtitle {
+  @include text-base;
+  color: $color-text-secondary;
+  margin-top: 2px;
+}
+
+.searchBox {
+  display: flex;
+  gap: 8px;
+  background: $color-bg-white;
+  border: 1px solid $color-border-light;
+  border-radius: 8px;
+  padding: 6px 12px;
+  align-items: center;
+  box-shadow: 0 1px 3px $shadow-sm;
+  margin-bottom: 20px;
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: $color-text-primary;
+  @include text-body;
+  padding: 4px 0;
+  font-family: $font-sans;
+}
+
 .searchBtn {
-  background: #2563eb;
+  background: $color-blue;
   margin-top: 0;
   padding: 6px 18px;
-  font-size: 13px;
-  font-weight: 600;
+  @include text-label;
 
   &:hover:not(:disabled) {
-    background: #1d4ed8;
+    background: $color-blue-hover;
   }
 
   &:disabled {
@@ -15,15 +75,102 @@
   }
 }
 
-.resetBtn {
-  color: #dc2626;
-  border-color: #fecaca;
-  margin: 0;
-  padding: 3px 10px;
-  font-size: 12px;
+.resultsBox {
+  background: $color-bg-white;
+  border-radius: 8px;
+  border: 1px solid $color-border-light;
+  overflow: hidden;
+  box-shadow: 0 1px 3px $shadow-sm;
+}
 
-  &:disabled {
-    cursor: default;
-    opacity: 0.7;
-  }
+.resultsHeader {
+  padding: 12px 16px;
+  border-bottom: 1px solid $color-slate-100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $color-slate-50;
+  @include text-base;
+  color: $color-text-secondary;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  @include text-base;
+}
+
+.th {
+  text-align: left;
+  padding: 10px 16px;
+  color: $color-text-secondary;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  @include text-xs;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid $color-border-light;
+  background: $color-slate-50;
+}
+
+.tr {
+  border-bottom: 1px solid $color-slate-100;
+}
+
+.cellId {
+  padding: 12px 16px;
+  color: $color-text-muted;
+}
+
+.cellName {
+  padding: 12px 16px;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.cellRole {
+  padding: 12px 16px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  @include text-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+}
+
+.badgeAdmin {
+  color: $badge-admin;
+  background: $badge-admin-background;
+}
+
+.badgeModerator {
+  color: $badge-moder;
+  background: $badge-moder-background;
+}
+
+.badgeUser {
+  color: $badge-user;
+  background: $badge-user-background;
+}
+
+.empty {
+  color: $color-text-muted;
+  text-align: center;
+  padding: 40px 0;
+  @include text-body;
+}
+
+.hint {
+  color: $color-slate-200;
+  text-align: center;
+  padding: 40px 0;
+  @include text-base;
+}
+
+.dbError {
+  @include code;
+  color: $color-danger;
+  background: #fff5f5;
+  padding: 16px;
 }

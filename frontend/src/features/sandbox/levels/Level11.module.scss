@@ -34,7 +34,9 @@
 }
 
 .searchIcon {
-  font-size: 14px;
+  width: 16px;
+  height: 16px;
+  opacity: 0.4;
   flex-shrink: 0;
 }
 
@@ -118,6 +120,19 @@
   gap: 16px;
   font-size: 11px;
   color: #94a3b8;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metaIcon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.45;
+  flex-shrink: 0;
 }
 
 .postinstallWarning {

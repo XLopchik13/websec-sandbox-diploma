@@ -1,7 +1,9 @@
+@use "@/shared/styles" as *;
+
 .header {
-  height: 52px;
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  height: 66px;
+  background: $color-bg-white;
+  border-bottom: 1px solid $color-border-light;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,18 +39,27 @@
 
 .toggleLine {
   display: block;
-  width: 18px;
-  height: 2px;
-  background: #0f172a;
-  border-radius: 1px;
+  width: 20px;
+  height: 3px;
+  background: $color-text-primary;
+  border-radius: 10px;
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 800;
-  color: #0f172a;
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-extrabold;
+  color: $color-text-primary;
   letter-spacing: -0.5px;
   user-select: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
 
 .right {
@@ -59,12 +70,12 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #cbd5e1;
-  color: #475569;
+  background: $color-slate-200;
+  color: $color-text-body;
   border: none;
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 700;
+  @include text-xs;
+  font-weight: $font-weight-bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,10 +91,10 @@
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: $color-bg-white;
+  border: 1px solid $color-border-light;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px $shadow-sm;
   min-width: 210px;
   overflow: hidden;
   z-index: 100;
@@ -100,14 +111,14 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #cbd5e1;
+  background: $color-slate-200;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: #475569;
+  @include text-xs;
+  font-weight: $font-weight-bold;
+  color: $color-text-body;
 }
 
 .dropdownMeta {
@@ -117,19 +128,18 @@
 }
 
 .dropdownName {
-  font-size: 14px;
-  font-weight: 600;
-  color: #0f172a;
+  @include text-label;
+  color: $color-text-primary;
 }
 
 .dropdownSolved {
-  font-size: 12px;
-  color: #94a3b8;
+  @include text-sm;
+  color: $color-text-muted;
 }
 
 .dropdownDivider {
   height: 1px;
-  background: #e2e8f0;
+  background: $color-border-light;
 }
 
 .dropdownItem {
@@ -139,18 +149,18 @@
   background: none;
   border: none;
   padding: 10px 16px;
-  font-size: 13px;
-  color: #0f172a;
+  @include text-base;
+  color: $color-text-primary;
   cursor: pointer;
   margin: 0;
   font-family: inherit;
   transition: background 0.1s;
 
   &:hover {
-    background: #f8fafc;
+    background: $color-slate-50;
   }
 
   &.danger {
-    color: #dc2626;
+    color: $color-danger;
   }
 }

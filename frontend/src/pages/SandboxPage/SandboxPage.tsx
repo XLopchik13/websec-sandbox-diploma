@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
@@ -35,7 +35,6 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   const [view, setView] = useState<View>({ kind: "welcome" });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
-
   useEffect(() => {
     sandboxApi
       .getLevels(token)
@@ -110,7 +109,6 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
     if (view.kind === "welcome") {
       return (
         <div className={styles.welcome}>
-          <div className={styles.welcomeIcon}>🔐</div>
           <h2>Добро пожаловать в WEBSEC</h2>
           <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
         </div>
@@ -196,6 +194,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         total={levels.length}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
+        onHome={() => setView({ kind: "welcome" })}
         onLogout={onLogout}
         onProfile={() => setView({ kind: "profile" })}
         onResetProgress={handleResetProgress}
@@ -211,7 +210,14 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
           onSelectLevel={handleSelectLevel}
           onSelectCategory={handleSelectCategory}
         />
-        <main className={styles.content}>{renderContent()}</main>
+        <main
+          className={`${styles.content} ${view.kind === "welcome" || view.kind === "theory" ? styles.centered : ""}`}
+          style={
+            { "--sidebar-w": sidebarOpen ? "260px" : "0px" } as CSSProperties
+          }
+        >
+          {renderContent()}
+        </main>
       </div>
     </div>
   );

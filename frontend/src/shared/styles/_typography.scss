@@ -1,0 +1,80 @@
+// Font families
+$font-sans: "Anonymous Pro", "Courier New", monospace;
+$font-mono: "Anonymous Pro", "Courier New", monospace;
+
+// Font sizes
+$font-size-xs: 11px;
+$font-size-sm: 12px;
+$font-size-base: 13px;
+$font-size-md: 14px;
+$font-size-lg: 15px;
+$font-size-xl: 17px;
+$font-size-2xl: 20px;
+$font-size-3xl: 22px;
+$font-size-4xl: 26px;
+
+// Font weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// Line heights
+$line-height-tight: 1.5;
+$line-height-base: 1.6;
+$line-height-relaxed: 1.8;
+$line-height-loose: 1.9;
+
+// Text style mixins
+// Usage: @include text-body;
+@mixin text-xs {
+  font-size: $font-size-xs;
+  line-height: $line-height-tight;
+}
+@mixin text-sm {
+  font-size: $font-size-sm;
+  line-height: $line-height-tight;
+}
+@mixin text-base {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+@mixin text-body {
+  font-size: $font-size-md;
+  line-height: $line-height-loose;
+}
+@mixin text-label {
+  font-size: $font-size-md;
+  line-height: $line-height-base;
+  font-weight: $font-weight-medium;
+}
+@mixin text-info {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+@mixin heading-sm {
+  font-size: $font-size-lg;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-bold;
+}
+@mixin heading-md {
+  font-size: $font-size-xl;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-bold;
+}
+@mixin heading-lg {
+  font-size: $font-size-3xl;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-bold;
+}
+@mixin heading-xl {
+  font-size: $font-size-4xl;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-extrabold;
+}
+@mixin code {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  line-height: $line-height-base;
+}

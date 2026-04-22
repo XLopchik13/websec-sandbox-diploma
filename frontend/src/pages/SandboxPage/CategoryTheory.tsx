@@ -330,7 +330,7 @@ export function CategoryTheory({
                   className={completed ? styles.solvedBtn : styles.practiceBtn}
                   onClick={() => onPractice(level.id)}
                 >
-                  {completed ? "✓ Решено" : "Перейти к практике"}
+                  {completed ? "Решено" : "Перейти к практике"}
                 </Button>
               </div>
             );
