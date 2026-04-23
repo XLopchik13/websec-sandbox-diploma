@@ -65,6 +65,9 @@ export function useAuth() {
       await userApi.register(email, username, password);
       return true;
     } catch (err) {
+      if (err instanceof Error && err.message === "email_not_verified") {
+        return true;
+      }
       setError(err instanceof Error ? err.message : "Registration failed");
       return false;
     } finally {
