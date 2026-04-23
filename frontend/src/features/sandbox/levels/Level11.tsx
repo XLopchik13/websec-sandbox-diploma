@@ -196,7 +196,7 @@ export function Level11({ onSuccess }: LevelProps) {
 
           {attackDone && (
             <div className={styles.successBanner}>
-              <strong>⚠ Атака выполнена!</strong>
+              <strong>Атака выполнена!</strong>
               Typosquatting-пакет <code>chartlib</code> выполнил
               postinstall-скрипт, который считал переменные окружения и отправил
               их на сервер злоумышленника. В реальной атаке это ведёт к
