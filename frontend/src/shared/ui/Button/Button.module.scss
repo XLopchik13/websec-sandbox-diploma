@@ -1,6 +1,9 @@
 @use "@/shared/styles" as *;
 
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 9px 18px;
   cursor: pointer;
   background: $color-primary;
@@ -16,7 +19,8 @@
     background: $color-primary-hover;
   }
 
-  &:disabled {
+  &:disabled,
+  &.loading {
     cursor: default;
     pointer-events: none;
     opacity: 0.65;
@@ -39,7 +43,7 @@
   &.danger {
     background: $color-danger;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $color-danger-hover;
     }
   }
@@ -58,7 +62,7 @@
     border: 1px solid currentColor;
     color: inherit;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $color-bg-ghost-hover;
     }
 
@@ -66,5 +70,23 @@
       cursor: default;
       opacity: 0.5;
     }
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.55s linear infinite;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -92,27 +92,9 @@
 }
 
 .btnConfirm {
+  width: 100%;
   padding: 11px;
-  border: none;
   border-radius: 8px;
-  @include text-label;
-  cursor: pointer;
-  transition: background 0.15s;
-  color: $color-text-white;
-
-  &.success {
-    background: $color-success;
-    &:hover {
-      background: $color-success-hover;
-    }
-  }
-
-  &.danger {
-    background: $color-danger;
-    &:hover {
-      background: $color-danger-hover;
-    }
-  }
 }
 
 .btnCancel {

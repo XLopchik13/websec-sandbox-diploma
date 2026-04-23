@@ -43,6 +43,8 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [successLevelId, setSuccessLevelId] = useState<string | null>(null);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [levelResetLoading, setLevelResetLoading] = useState(false);
+  const [progressResetLoading, setProgressResetLoading] = useState(false);
 
   useEffect(() => {
     sandboxApi
@@ -71,6 +73,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   };
 
   const handleLevelReset = async (id: string) => {
+    setLevelResetLoading(true);
     try {
       const resetApi = LEVEL_RESET_APIS[id];
       if (resetApi) await resetApi(token);
@@ -83,6 +86,8 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
       setCompletedLevels((prev) => prev.filter((l) => l !== id));
     } catch (err) {
       console.error("Failed to uncomplete level", err);
+    } finally {
+      setLevelResetLoading(false);
     }
   };
 
@@ -99,12 +104,14 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   };
 
   const handleResetProgress = async () => {
+    setProgressResetLoading(true);
     try {
       await sandboxApi.resetProgress(token);
       setCompletedLevels([]);
     } catch (err) {
       console.error("Failed to reset progress", err);
     } finally {
+      setProgressResetLoading(false);
       setResetConfirmOpen(false);
     }
   };
@@ -174,6 +181,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             <p>{selectedLevel.description}</p>
             <ResetLevelButton
               onClick={() => handleLevelReset(selectedLevel.id)}
+              loading={levelResetLoading}
               className={styles.resetBtn}
             />
           </div>
@@ -251,6 +259,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
           body="Все пройденные уровни будут отмечены как непройденные. Это действие нельзя отменить."
           confirmLabel="Сбросить"
           cancelLabel="Отмена"
+          loading={progressResetLoading}
           onConfirm={handleResetProgress}
           onCancel={() => setResetConfirmOpen(false)}
         />

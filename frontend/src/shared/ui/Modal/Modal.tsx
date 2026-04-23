@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Button } from "@/shared/ui/Button/Button";
 import styles from "./Modal.module.scss";
 
 interface ModalProps {
@@ -8,6 +9,7 @@ interface ModalProps {
   badge?: string;
   confirmLabel: string;
   cancelLabel?: string;
+  loading?: boolean;
   onConfirm: () => void;
   onCancel?: () => void;
 }
@@ -19,6 +21,7 @@ export function Modal({
   badge,
   confirmLabel,
   cancelLabel,
+  loading = false,
   onConfirm,
   onCancel,
 }: ModalProps) {
@@ -33,7 +36,10 @@ export function Modal({
   }, [handleClose]);
 
   return (
-    <div className={styles.backdrop} onClick={handleClose}>
+    <div
+      className={styles.backdrop}
+      onClick={loading ? undefined : handleClose}
+    >
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
         <div className={`${styles.icon} ${styles[variant]}`}>
           <svg className={styles.iconSvg} viewBox="0 0 24 24">
@@ -51,14 +57,20 @@ export function Modal({
         {badge && <div className={styles.badge}>{badge}</div>}
 
         <div className={styles.actions}>
-          <button
-            className={`${styles.btnConfirm} ${styles[variant]}`}
+          <Button
+            variant={variant === "success" ? "primary" : "danger"}
+            loading={loading}
             onClick={onConfirm}
+            className={styles.btnConfirm}
           >
             {confirmLabel}
-          </button>
+          </Button>
           {cancelLabel && (
-            <button className={styles.btnCancel} onClick={handleClose}>
+            <button
+              className={styles.btnCancel}
+              disabled={loading}
+              onClick={handleClose}
+            >
               {cancelLabel}
             </button>
           )}
