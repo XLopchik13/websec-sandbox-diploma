@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/entities/user/model";
 import { userApi } from "@/entities/user/api";
-import { useRouter } from "@/shared/router";
+import { Router, useRouter } from "@/shared/router";
 import { AuthPage } from "@/pages/AuthPage/AuthPage";
 import { SandboxPage } from "@/pages/SandboxPage/SandboxPage";
+import type { SandboxView } from "@/pages/SandboxPage/SandboxPage";
 import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
 import { ResetPasswordModal } from "@/features/auth/ResetPasswordModal/ResetPasswordModal";
+import { createAppRoutes } from "./routes";
 
 function readUrlTokens() {
   const params = new URLSearchParams(window.location.search);
@@ -20,27 +22,9 @@ function readUrlTokens() {
 const { resetToken: INITIAL_RESET, verifyToken: INITIAL_VERIFY } =
   readUrlTokens();
 
-function isValidDashboardPath(pathname: string) {
-  if (pathname === "/dashboard" || pathname === "/dashboard/") {
-    return true;
-  }
-
-  const levelMatch = pathname.match(/^\/dashboard\/level\/([^/]+)\/?$/);
-  if (levelMatch) {
-    return levelMatch[1].length > 0;
-  }
-
-  const theoryMatch = pathname.match(/^\/dashboard\/theory\/([^/]+)\/?$/);
-  if (theoryMatch) {
-    return theoryMatch[1].length > 0;
-  }
-
-  return false;
-}
-
 export function App() {
   const { user, token, loading, error, login, register, logout } = useAuth();
-  const { pathname, navigate, replaceRoute } = useRouter();
+  const { pathname, replaceRoute } = useRouter();
   const [registrationEmail, setRegistrationEmail] = useState<string | null>(
     null,
   );
@@ -64,7 +48,7 @@ export function App() {
     if (!user && !token && pathname.startsWith("/dashboard")) {
       replaceRoute("/");
     }
-  }, [user, token, pathname, navigate, replaceRoute]);
+  }, [user, token, pathname, replaceRoute]);
 
   const handleRegister = async (
     email: string,
@@ -82,43 +66,40 @@ export function App() {
     );
   }
 
-  const isAuthRoute = pathname === "/";
-  const isNotFoundRoute = pathname === "/404";
-  const isDashboardRoute = isValidDashboardPath(pathname);
-  const isValidRoute = isAuthRoute || isDashboardRoute || isNotFoundRoute;
+  const homePath = user && token ? "/dashboard" : "/";
+  const authError =
+    verifyStatus === "error" ? "Ссылка недействительна или устарела" : error;
+  const authSuccess =
+    verifyStatus === "done" ? "Email подтверждён! Войдите в аккаунт." : null;
 
-  if (!isValidRoute) {
-    return <NotFoundPage homePath={user && token ? "/dashboard" : "/"} />;
-  }
+  const renderAuthPage = () => (
+    <AuthPage
+      onLogin={login}
+      onRegister={handleRegister}
+      loading={loading}
+      error={authError}
+      success={authSuccess}
+      registrationEmail={registrationEmail}
+      onBackToLogin={() => setRegistrationEmail(null)}
+    />
+  );
 
-  if (isNotFoundRoute) {
-    return <NotFoundPage homePath={user && token ? "/dashboard" : "/"} />;
-  }
-
-  if (user && token && isDashboardRoute) {
-    return <SandboxPage user={user} token={token} onLogout={logout} />;
-  }
-
-  if (!user || !token) {
-    const authError =
-      verifyStatus === "error" ? "Ссылка недействительна или устарела" : error;
-    const authSuccess =
-      verifyStatus === "done" ? "Email подтверждён! Войдите в аккаунт." : null;
-
-    return (
-      <AuthPage
-        onLogin={login}
-        onRegister={handleRegister}
-        loading={loading}
-        error={authError}
-        success={authSuccess}
-        registrationEmail={registrationEmail}
-        onBackToLogin={() => setRegistrationEmail(null)}
-      />
+  const renderDashboardPage = (view: SandboxView) =>
+    user && token ? (
+      <SandboxPage user={user} token={token} onLogout={logout} view={view} />
+    ) : (
+      renderAuthPage()
     );
-  }
 
-  return <NotFoundPage homePath={user && token ? "/dashboard" : "/"} />;
+  const routes = createAppRoutes({
+    renderAuthPage,
+    renderDashboardPage,
+    homePath,
+  });
+
+  return (
+    <Router routes={routes} fallback={<NotFoundPage homePath={homePath} />} />
+  );
 }
 
 export default App;

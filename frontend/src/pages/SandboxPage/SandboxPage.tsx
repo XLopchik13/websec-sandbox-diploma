@@ -18,44 +18,26 @@ const LEVEL_RESET_APIS: Record<string, (token: string) => Promise<unknown>> = {
   "10": (token) => sandboxApi.csrfReset(token),
 };
 
-type View =
+export type SandboxView =
   | { kind: "welcome" }
   | { kind: "theory"; category: string }
   | { kind: "practice"; levelId: string };
-
-function parseViewFromPath(pathname: string): View {
-  if (pathname.startsWith("/dashboard/level/")) {
-    const levelId = pathname.slice("/dashboard/level/".length);
-    return { kind: "practice", levelId };
-  }
-  if (pathname.startsWith("/dashboard/theory/")) {
-    const category = decodeURIComponent(
-      pathname.slice("/dashboard/theory/".length),
-    );
-    return { kind: "theory", category };
-  }
-  return { kind: "welcome" };
-}
 
 interface SandboxPageProps {
   user: User;
   token: string;
   onLogout: () => void;
+  view: SandboxView;
 }
 
-export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
-  const { pathname, navigate, replaceRoute } = useRouter();
+export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
+  const { navigate, replaceRoute } = useRouter();
   const [levels, setLevels] = useState<SandboxLevel[]>([]);
   const [levelsLoaded, setLevelsLoaded] = useState(false);
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
-  const [view, setView] = useState<View>(() => parseViewFromPath(pathname));
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
-
-  useEffect(() => {
-    setView(parseViewFromPath(pathname));
-  }, [pathname]);
 
   useEffect(() => {
     setLevelsLoaded(false);
