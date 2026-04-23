@@ -33,14 +33,15 @@ interface SandboxPageProps {
 export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const { navigate, replaceRoute } = useRouter();
   const [levels, setLevels] = useState<SandboxLevel[]>([]);
-  const [levelsLoaded, setLevelsLoaded] = useState(false);
+  const [loadedLevelsForToken, setLoadedLevelsForToken] = useState<
+    string | null
+  >(null);
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
 
   useEffect(() => {
-    setLevelsLoaded(false);
     sandboxApi
       .getLevels(token)
       .then((meta) =>
@@ -51,7 +52,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
         ),
       )
       .catch(console.error)
-      .finally(() => setLevelsLoaded(true));
+      .finally(() => setLoadedLevelsForToken(token));
     sandboxApi
       .getProgress(token)
       .then(({ completed }) => setCompletedLevels(completed))
@@ -109,6 +110,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
 
   const selectedLevelId = view.kind === "practice" ? view.levelId : null;
   const selectedCategory = view.kind === "theory" ? view.category : null;
+  const levelsLoaded = loadedLevelsForToken === token;
   const selectedLevel = levels.find((l) => l.id === selectedLevelId);
   const categoryLevels =
     view.kind === "theory"
