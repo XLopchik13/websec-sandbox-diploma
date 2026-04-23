@@ -1,4 +1,10 @@
-import { useState, useEffect, type CSSProperties } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type CSSProperties,
+} from "react";
 import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
 import { useRouter } from "@/shared/router";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
@@ -44,6 +50,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const [successLevelId, setSuccessLevelId] = useState<string | null>(null);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const [progressResetLoading, setProgressResetLoading] = useState(false);
+  const [displayedView, setDisplayedView] = useState<SandboxView>(view);
 
   useEffect(() => {
     sandboxApi
@@ -113,6 +120,63 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
     }
   };
 
+  const oldContentRef = useRef<HTMLDivElement>(null);
+  const newContentRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (
+      displayedView.kind === view.kind &&
+      (view.kind === "welcome" ||
+        (view.kind === "practice" &&
+          displayedView.kind === "practice" &&
+          displayedView.levelId === view.levelId) ||
+        (view.kind === "theory" &&
+          displayedView.kind === "theory" &&
+          displayedView.category === view.category))
+    ) {
+      return;
+    }
+
+    const oldEl = oldContentRef.current;
+    const newEl = newContentRef.current;
+    if (!oldEl || !newEl) return;
+
+    oldEl.style.transition = "none";
+    oldEl.style.transform = "translateX(0)";
+    newEl.style.transition = "none";
+    newEl.style.transform = "translateX(100%)";
+    newEl.style.visibility = "visible";
+    void oldEl.offsetHeight;
+
+    oldEl.style.transition =
+      "transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+    newEl.style.transition =
+      "transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+    const id = requestAnimationFrame(() => {
+      oldEl.style.transform = "translateX(-100%)";
+      newEl.style.transform = "translateX(0)";
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [view, displayedView]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (oldContentRef.current) {
+        oldContentRef.current.style.transform = "";
+        oldContentRef.current.style.transition = "";
+      }
+      if (newContentRef.current) {
+        newContentRef.current.style.transform = "";
+        newContentRef.current.style.transition = "";
+        newContentRef.current.style.visibility = "";
+      }
+      setDisplayedView(view);
+    }, 320);
+    return () => clearTimeout(timer);
+  }, [view]);
+
   const categories = [...new Set(levels.map((l) => l.category))];
 
   const selectedLevelId = view.kind === "practice" ? view.levelId : null;
@@ -137,7 +201,60 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
     }
   }, [hasInvalidView, replaceRoute]);
 
-  const renderContent = () => {
+  const renderDisplayedContent = () => {
+    if (displayedView.kind === "welcome") {
+      return (
+        <div className={styles.welcome}>
+          <h2>Добро пожаловать в WEBSEC</h2>
+          <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
+        </div>
+      );
+    }
+
+    if (displayedView.kind === "theory") {
+      const displayedLevels = levels.filter(
+        (l) => l.category === displayedView.category,
+      );
+      return (
+        <CategoryTheory
+          category={displayedView.category}
+          levels={displayedLevels}
+          completedLevels={completedLevels}
+          onPractice={(id) => navigate(`/dashboard/level/${id}`)}
+          onBack={() => navigate("/dashboard")}
+        />
+      );
+    }
+
+    if (displayedView.kind === "practice") {
+      const displayedLevel = levels.find((l) => l.id === displayedView.levelId);
+      if (displayedLevel) {
+        const LevelComponent = displayedLevel.component;
+        return (
+          <div className={styles.practiceRow}>
+            <div className={styles.practiceMain}>
+              <LevelComponent
+                key={`${displayedLevel.id}-${resetKey}`}
+                onSuccess={() => handleLevelSuccess(displayedLevel.id)}
+              />
+            </div>
+            <div className={styles.practiceInfoPanel}>
+              <h3>{displayedLevel.title}</h3>
+              <p>{displayedLevel.description}</p>
+              <ResetLevelButton
+                onClick={() => handleLevelReset(displayedLevel.id)}
+                className={styles.resetBtn}
+              />
+            </div>
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
+
+  const renderNewContent = () => {
     if (view.kind === "welcome") {
       return (
         <div className={styles.welcome}>
@@ -214,17 +331,13 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             { "--sidebar-w": sidebarOpen ? "260px" : "0px" } as CSSProperties
           }
         >
-          <div
-            key={
-              view.kind === "practice"
-                ? `practice-${view.levelId}`
-                : view.kind === "theory"
-                  ? `theory-${view.category}`
-                  : "welcome"
-            }
-            className={styles.viewTransition}
-          >
-            {renderContent()}
+          <div className={styles.viewTransition}>
+            <div ref={oldContentRef} className={styles.slideContent}>
+              {renderDisplayedContent()}
+            </div>
+            <div ref={newContentRef} className={styles.slideContent}>
+              {renderNewContent()}
+            </div>
           </div>
         </main>
       </div>

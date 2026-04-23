@@ -17,11 +17,10 @@
 
 .content {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px;
+  overflow: hidden;
   min-width: 0;
   background: $color-bg-white;
+  position: relative;
 }
 
 .centered {
@@ -58,18 +57,22 @@
 }
 
 .viewTransition {
-  animation: viewIn 0.26s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
-@keyframes viewIn {
-  from {
-    opacity: 0;
-    transform: translateX(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.slideContent {
+  position: absolute;
+  inset: 0;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.viewTransition > .slideContent:last-child {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .practiceRow {
@@ -92,6 +95,9 @@
   padding: 20px;
   @include text-info;
   color: $color-text-body;
+  position: sticky;
+  top: 0;
+  height: fit-content;
 
   h3 {
     @include text-label;
