@@ -1,0 +1,166 @@
+@use "@/shared/styles" as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: backdropIn 0.2s ease;
+}
+
+.card {
+  background: $color-bg-white;
+  border-radius: 16px;
+  padding: 24px 16px 16px;
+  text-align: center;
+  max-width: 400px;
+  width: calc(100% - 32px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+  animation: cardIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: iconPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both;
+
+  &.success {
+    background: #f0fdf4;
+  }
+  &.danger {
+    background: #fef2f2;
+  }
+}
+
+.iconSvg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  .success & {
+    stroke: $color-success;
+  }
+  .danger & {
+    stroke: $color-danger;
+  }
+}
+
+.checkPath {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawPath 0.35s ease 0.2s forwards;
+}
+
+.title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 8px;
+}
+
+.body {
+  @include text-body;
+  color: $color-text-secondary;
+  margin: 0 0 20px;
+}
+
+.badge {
+  display: inline-block;
+  background: $color-slate-100;
+  border-radius: 6px;
+  padding: 3px 10px;
+  @include text-info;
+  color: $color-text-body;
+  font-weight: $font-weight-medium;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.btnConfirm {
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  @include text-label;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: $color-text-white;
+
+  &.success {
+    background: $color-success;
+    &:hover {
+      background: $color-success-hover;
+    }
+  }
+
+  &.danger {
+    background: $color-danger;
+    &:hover {
+      background: $color-danger-hover;
+    }
+  }
+}
+
+.btnCancel {
+  padding: 11px;
+  background: $color-slate-100;
+  border: 1px solid $color-border-light;
+  border-radius: 8px;
+  @include text-label;
+  cursor: pointer;
+  color: $color-text-body;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $color-slate-200;
+  }
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes iconPop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawPath {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

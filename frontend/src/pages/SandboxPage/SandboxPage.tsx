@@ -6,6 +6,7 @@ import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
 import type { User } from "@/entities/user/types";
 import { ChangePasswordModal } from "@/features/auth/ChangePasswordModal/ChangePasswordModal";
+import { Modal } from "@/shared/ui/Modal/Modal";
 import { AppHeader } from "./AppHeader";
 import { Sidebar } from "./Sidebar";
 import { CategoryTheory } from "./CategoryTheory";
@@ -40,6 +41,8 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [successLevelId, setSuccessLevelId] = useState<string | null>(null);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
   useEffect(() => {
     sandboxApi
@@ -88,7 +91,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
       try {
         const { completed } = await sandboxApi.completeLevel(token, id);
         setCompletedLevels(completed);
-        alert(`Поздравляем! Уязвимость на уровне ${id} найдена!`);
+        setSuccessLevelId(id);
       } catch (err) {
         console.error("Failed to save progress", err);
       }
@@ -96,13 +99,13 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   };
 
   const handleResetProgress = async () => {
-    if (confirm("Сбросить весь прогресс?")) {
-      try {
-        await sandboxApi.resetProgress(token);
-        setCompletedLevels([]);
-      } catch (err) {
-        console.error("Failed to reset progress", err);
-      }
+    try {
+      await sandboxApi.resetProgress(token);
+      setCompletedLevels([]);
+    } catch (err) {
+      console.error("Failed to reset progress", err);
+    } finally {
+      setResetConfirmOpen(false);
     }
   };
 
@@ -192,7 +195,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
         onHome={() => navigate("/dashboard")}
         onLogout={onLogout}
         onChangePassword={() => setChangePasswordOpen(true)}
-        onResetProgress={handleResetProgress}
+        onResetProgress={() => setResetConfirmOpen(true)}
       />
       <div className={styles.body}>
         <Sidebar
@@ -218,6 +221,27 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
         <ChangePasswordModal
           userEmail={user.email}
           onClose={() => setChangePasswordOpen(false)}
+        />
+      )}
+      {successLevelId && (
+        <Modal
+          variant="success"
+          title="Уязвимость найдена!"
+          body="Вы успешно эксплуатировали уязвимость и прошли уровень."
+          badge={`Уровень ${successLevelId.replace(/\D/g, "")} пройден`}
+          confirmLabel="Продолжить"
+          onConfirm={() => setSuccessLevelId(null)}
+        />
+      )}
+      {resetConfirmOpen && (
+        <Modal
+          variant="danger"
+          title="Сбросить прогресс?"
+          body="Все пройденные уровни будут отмечены как непройденные. Это действие нельзя отменить."
+          confirmLabel="Сбросить"
+          cancelLabel="Отмена"
+          onConfirm={handleResetProgress}
+          onCancel={() => setResetConfirmOpen(false)}
         />
       )}
     </div>
