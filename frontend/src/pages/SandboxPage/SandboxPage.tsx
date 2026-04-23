@@ -161,7 +161,6 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
 
     if (view.kind === "practice" && selectedLevel) {
       const LevelComponent = selectedLevel.component;
-      const levelNumber = selectedLevel.id.replace(/\D/g, "");
       return (
         <div className={styles.practiceRow}>
           <div className={styles.practiceMain}>
@@ -171,10 +170,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             />
           </div>
           <div className={styles.practiceInfoPanel}>
-            <h3>
-              {levelNumber ? `Уровень ${levelNumber}: ` : ""}
-              {selectedLevel.title}
-            </h3>
+            <h3>{selectedLevel.title}</h3>
             <p>{selectedLevel.description}</p>
             <ResetLevelButton
               onClick={() => handleLevelReset(selectedLevel.id)}
