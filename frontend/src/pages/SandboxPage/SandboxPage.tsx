@@ -1,4 +1,10 @@
-import { useState, useEffect, type CSSProperties } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type CSSProperties,
+} from "react";
 import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
 import { useRouter } from "@/shared/router";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
@@ -6,6 +12,7 @@ import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
 import type { User } from "@/entities/user/types";
 import { ChangePasswordModal } from "@/features/auth/ChangePasswordModal/ChangePasswordModal";
+import { Modal } from "@/shared/ui/Modal/Modal";
 import { AppHeader } from "./AppHeader";
 import { Sidebar } from "./Sidebar";
 import { CategoryTheory } from "./CategoryTheory";
@@ -40,6 +47,10 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [successLevelId, setSuccessLevelId] = useState<string | null>(null);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [progressResetLoading, setProgressResetLoading] = useState(false);
+  const [displayedView, setDisplayedView] = useState<SandboxView>(view);
 
   useEffect(() => {
     sandboxApi
@@ -74,12 +85,13 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
     } catch (err) {
       console.error("Failed to reset level backend state", err);
     }
-    setResetKey((k) => k + 1);
     try {
       await sandboxApi.uncompleteLevel(token, id);
       setCompletedLevels((prev) => prev.filter((l) => l !== id));
     } catch (err) {
       console.error("Failed to uncomplete level", err);
+    } finally {
+      setResetKey((k) => k + 1);
     }
   };
 
@@ -88,7 +100,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
       try {
         const { completed } = await sandboxApi.completeLevel(token, id);
         setCompletedLevels(completed);
-        alert(`Поздравляем! Уязвимость на уровне ${id} найдена!`);
+        setSuccessLevelId(id);
       } catch (err) {
         console.error("Failed to save progress", err);
       }
@@ -96,15 +108,74 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   };
 
   const handleResetProgress = async () => {
-    if (confirm("Сбросить весь прогресс?")) {
-      try {
-        await sandboxApi.resetProgress(token);
-        setCompletedLevels([]);
-      } catch (err) {
-        console.error("Failed to reset progress", err);
-      }
+    setProgressResetLoading(true);
+    try {
+      await sandboxApi.resetProgress(token);
+      setCompletedLevels([]);
+    } catch (err) {
+      console.error("Failed to reset progress", err);
+    } finally {
+      setProgressResetLoading(false);
+      setResetConfirmOpen(false);
     }
   };
+
+  const oldContentRef = useRef<HTMLDivElement>(null);
+  const newContentRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (
+      displayedView.kind === view.kind &&
+      (view.kind === "welcome" ||
+        (view.kind === "practice" &&
+          displayedView.kind === "practice" &&
+          displayedView.levelId === view.levelId) ||
+        (view.kind === "theory" &&
+          displayedView.kind === "theory" &&
+          displayedView.category === view.category))
+    ) {
+      return;
+    }
+
+    const oldEl = oldContentRef.current;
+    const newEl = newContentRef.current;
+    if (!oldEl || !newEl) return;
+
+    oldEl.style.transition = "none";
+    oldEl.style.transform = "translateX(0)";
+    newEl.style.transition = "none";
+    newEl.style.transform = "translateX(100%)";
+    newEl.style.visibility = "visible";
+    void oldEl.offsetHeight;
+
+    oldEl.style.transition =
+      "transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+    newEl.style.transition =
+      "transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+    const id = requestAnimationFrame(() => {
+      oldEl.style.transform = "translateX(-100%)";
+      newEl.style.transform = "translateX(0)";
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [view, displayedView]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (oldContentRef.current) {
+        oldContentRef.current.style.transform = "";
+        oldContentRef.current.style.transition = "";
+      }
+      if (newContentRef.current) {
+        newContentRef.current.style.transform = "";
+        newContentRef.current.style.transition = "";
+        newContentRef.current.style.visibility = "";
+      }
+      setDisplayedView(view);
+    }, 320);
+    return () => clearTimeout(timer);
+  }, [view]);
 
   const categories = [...new Set(levels.map((l) => l.category))];
 
@@ -130,7 +201,60 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
     }
   }, [hasInvalidView, replaceRoute]);
 
-  const renderContent = () => {
+  const renderDisplayedContent = () => {
+    if (displayedView.kind === "welcome") {
+      return (
+        <div className={styles.welcome}>
+          <h2>Добро пожаловать в WEBSEC</h2>
+          <p>Выберите тему или уровень в боковой панели, чтобы начать.</p>
+        </div>
+      );
+    }
+
+    if (displayedView.kind === "theory") {
+      const displayedLevels = levels.filter(
+        (l) => l.category === displayedView.category,
+      );
+      return (
+        <CategoryTheory
+          category={displayedView.category}
+          levels={displayedLevels}
+          completedLevels={completedLevels}
+          onPractice={(id) => navigate(`/dashboard/level/${id}`)}
+          onBack={() => navigate("/dashboard")}
+        />
+      );
+    }
+
+    if (displayedView.kind === "practice") {
+      const displayedLevel = levels.find((l) => l.id === displayedView.levelId);
+      if (displayedLevel) {
+        const LevelComponent = displayedLevel.component;
+        return (
+          <div className={styles.practiceRow}>
+            <div className={styles.practiceMain}>
+              <LevelComponent
+                key={`${displayedLevel.id}-${resetKey}`}
+                onSuccess={() => handleLevelSuccess(displayedLevel.id)}
+              />
+            </div>
+            <div className={styles.practiceInfoPanel}>
+              <h3>{displayedLevel.title}</h3>
+              <p>{displayedLevel.description}</p>
+              <ResetLevelButton
+                onClick={() => handleLevelReset(displayedLevel.id)}
+                className={styles.resetBtn}
+              />
+            </div>
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
+
+  const renderNewContent = () => {
     if (view.kind === "welcome") {
       return (
         <div className={styles.welcome}>
@@ -154,7 +278,6 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
 
     if (view.kind === "practice" && selectedLevel) {
       const LevelComponent = selectedLevel.component;
-      const levelNumber = selectedLevel.id.replace(/\D/g, "");
       return (
         <div className={styles.practiceRow}>
           <div className={styles.practiceMain}>
@@ -164,10 +287,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             />
           </div>
           <div className={styles.practiceInfoPanel}>
-            <h3>
-              {levelNumber ? `Уровень ${levelNumber}: ` : ""}
-              {selectedLevel.title}
-            </h3>
+            <h3>{selectedLevel.title}</h3>
             <p>{selectedLevel.description}</p>
             <ResetLevelButton
               onClick={() => handleLevelReset(selectedLevel.id)}
@@ -192,7 +312,7 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
         onHome={() => navigate("/dashboard")}
         onLogout={onLogout}
         onChangePassword={() => setChangePasswordOpen(true)}
-        onResetProgress={handleResetProgress}
+        onResetProgress={() => setResetConfirmOpen(true)}
       />
       <div className={styles.body}>
         <Sidebar
@@ -211,13 +331,42 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             { "--sidebar-w": sidebarOpen ? "260px" : "0px" } as CSSProperties
           }
         >
-          {renderContent()}
+          <div className={styles.viewTransition}>
+            <div ref={oldContentRef} className={styles.slideContent}>
+              {renderDisplayedContent()}
+            </div>
+            <div ref={newContentRef} className={styles.slideContent}>
+              {renderNewContent()}
+            </div>
+          </div>
         </main>
       </div>
       {changePasswordOpen && (
         <ChangePasswordModal
           userEmail={user.email}
           onClose={() => setChangePasswordOpen(false)}
+        />
+      )}
+      {successLevelId && (
+        <Modal
+          variant="success"
+          title="Уязвимость найдена!"
+          body="Вы успешно эксплуатировали уязвимость и прошли уровень."
+          badge={`Уровень ${successLevelId.replace(/\D/g, "")} пройден`}
+          confirmLabel="Продолжить"
+          onConfirm={() => setSuccessLevelId(null)}
+        />
+      )}
+      {resetConfirmOpen && (
+        <Modal
+          variant="danger"
+          title="Сбросить прогресс?"
+          body="Все пройденные уровни будут отмечены как непройденные. Это действие нельзя отменить."
+          confirmLabel="Сбросить"
+          cancelLabel="Отмена"
+          loading={progressResetLoading}
+          onConfirm={handleResetProgress}
+          onCancel={() => setResetConfirmOpen(false)}
         />
       )}
     </div>

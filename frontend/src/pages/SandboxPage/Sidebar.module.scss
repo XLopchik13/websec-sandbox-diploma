@@ -18,6 +18,7 @@
 .nav {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px 0;
 }
 
@@ -54,6 +55,7 @@
 }
 
 .levelItem {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -67,22 +69,42 @@
   font-size: $font-size-md;
   color: #64748b;
   white-space: nowrap;
-  transition: color 0.1s;
+  transition:
+    color 0.15s,
+    transform 0.15s;
   border-radius: 0;
   text-decoration: none;
 
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 3px;
+    height: 60%;
+    background: $color-primary;
+    border-radius: 0 2px 2px 0;
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
   &:hover {
     color: #0f172a;
+    transform: translateX(3px);
   }
 
   &.active {
     color: #0f172a;
     font-weight: 500;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    transform: translateX(3px);
+
+    &::before {
+      transform: translateY(-50%) scaleY(1);
+    }
   }
 
   &.completed::after {
+    content: "✓";
     color: #16a34a;
     font-size: 11px;
     margin-left: 4px;

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { ProgressBar } from "@/shared/ui/ProgressBar/ProgressBar";
 import styles from "./AppHeader.module.scss";
 
 interface AppHeaderProps {
@@ -39,6 +40,9 @@ export function AppHeader({
 
   return (
     <header className={styles.header}>
+      <div className={styles.progressBarWrapper}>
+        <ProgressBar value={solved} max={total} />
+      </div>
       <div className={styles.left}>
         <button
           className={styles.toggleBtn}

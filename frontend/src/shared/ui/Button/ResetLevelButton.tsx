@@ -1,10 +1,10 @@
-import type React from "react";
 import { Button } from "./Button";
+import type { ComponentProps } from "react";
 
 export function ResetLevelButton({
   children = "Сбросить уровень",
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ComponentProps<typeof Button>) {
   return (
     <Button variant="danger" {...props}>
       {children}

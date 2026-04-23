@@ -1,6 +1,9 @@
 @use "@/shared/styles" as *;
 
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 9px 18px;
   cursor: pointer;
   background: $color-primary;
@@ -39,7 +42,7 @@
   &.danger {
     background: $color-danger;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $color-danger-hover;
     }
   }
@@ -58,7 +61,7 @@
     border: 1px solid currentColor;
     color: inherit;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $color-bg-ghost-hover;
     }
 

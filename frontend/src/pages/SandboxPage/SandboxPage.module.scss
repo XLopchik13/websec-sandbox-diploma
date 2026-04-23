@@ -17,10 +17,10 @@
 
 .content {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px;
+  overflow: hidden;
   min-width: 0;
   background: $color-bg-white;
+  position: relative;
 }
 
 .centered {
@@ -56,6 +56,25 @@
   @include text-label;
 }
 
+.viewTransition {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.slideContent {
+  position: absolute;
+  inset: 0;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.viewTransition > .slideContent:last-child {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .practiceRow {
   display: flex;
   gap: 24px;
@@ -76,6 +95,9 @@
   padding: 20px;
   @include text-info;
   color: $color-text-body;
+  position: sticky;
+  top: 0;
+  height: fit-content;
 
   h3 {
     @include text-label;
