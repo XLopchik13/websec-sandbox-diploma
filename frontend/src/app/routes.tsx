@@ -28,7 +28,10 @@ export function createAppRoutes({
     {
       path: "/dashboard/theory/:category",
       component: ({ category }) =>
-        renderDashboardPage({ kind: "theory", category }),
+        renderDashboardPage({
+          kind: "theory",
+          category: decodeURIComponent(category),
+        }),
     },
     {
       path: "/404",
