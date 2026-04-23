@@ -1,0 +1,50 @@
+@use "@/shared/styles" as *;
+
+.root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-white;
+  color: $color-text-primary;
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+  padding: 40px 20px;
+}
+
+.code {
+  @include heading-xl;
+  font-size: 120px;
+  margin: 0;
+  color: $color-text-secondary;
+  font-weight: $font-weight-bold;
+}
+
+.title {
+  @include heading-lg;
+  margin: 16px 0 8px;
+}
+
+.description {
+  @include text-body;
+  color: $color-text-secondary;
+  margin: 0 0 32px;
+}
+
+.link {
+  display: inline-block;
+  padding: 10px 20px;
+  background: $color-primary;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  @include text-label;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

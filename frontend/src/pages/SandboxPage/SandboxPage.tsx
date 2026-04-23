@@ -1,5 +1,6 @@
 import { useState, useEffect, type CSSProperties } from "react";
 import { ResetLevelButton } from "@/shared/ui/Button/ResetLevelButton";
+import { useRouter } from "@/shared/router";
 import { LEVEL_COMPONENTS } from "@/features/sandbox";
 import { sandboxApi } from "@/entities/sandbox/api";
 import type { SandboxLevel } from "@/entities/sandbox/types";
@@ -17,7 +18,7 @@ const LEVEL_RESET_APIS: Record<string, (token: string) => Promise<unknown>> = {
   "10": (token) => sandboxApi.csrfReset(token),
 };
 
-type View =
+export type SandboxView =
   | { kind: "welcome" }
   | { kind: "theory"; category: string }
   | { kind: "practice"; levelId: string };
@@ -26,12 +27,16 @@ interface SandboxPageProps {
   user: User;
   token: string;
   onLogout: () => void;
+  view: SandboxView;
 }
 
-export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
+export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
+  const { navigate, replaceRoute } = useRouter();
   const [levels, setLevels] = useState<SandboxLevel[]>([]);
+  const [loadedLevelsForToken, setLoadedLevelsForToken] = useState<
+    string | null
+  >(null);
   const [completedLevels, setCompletedLevels] = useState<string[]>([]);
-  const [view, setView] = useState<View>({ kind: "welcome" });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -46,7 +51,8 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
             .map((m) => ({ ...m, component: LEVEL_COMPONENTS[m.id] })),
         ),
       )
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoadedLevelsForToken(token));
     sandboxApi
       .getProgress(token)
       .then(({ completed }) => setCompletedLevels(completed))
@@ -54,11 +60,11 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
   }, [token]);
 
   const handleSelectLevel = (id: string) => {
-    setView({ kind: "practice", levelId: id });
+    navigate(`/dashboard/level/${id}`);
   };
 
   const handleSelectCategory = (category: string) => {
-    setView({ kind: "theory", category });
+    navigate(`/dashboard/theory/${encodeURIComponent(category)}`);
   };
 
   const handleLevelReset = async (id: string) => {
@@ -104,7 +110,25 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
 
   const selectedLevelId = view.kind === "practice" ? view.levelId : null;
   const selectedCategory = view.kind === "theory" ? view.category : null;
+  const levelsLoaded = loadedLevelsForToken === token;
   const selectedLevel = levels.find((l) => l.id === selectedLevelId);
+  const categoryLevels =
+    view.kind === "theory"
+      ? levels.filter((l) => l.category === view.category)
+      : [];
+  const hasInvalidView =
+    (view.kind === "practice" &&
+      levelsLoaded &&
+      (!selectedLevelId || !selectedLevel)) ||
+    (view.kind === "theory" &&
+      levelsLoaded &&
+      (!selectedCategory || categoryLevels.length === 0));
+
+  useEffect(() => {
+    if (hasInvalidView) {
+      replaceRoute("/404");
+    }
+  }, [hasInvalidView, replaceRoute]);
 
   const renderContent = () => {
     if (view.kind === "welcome") {
@@ -117,14 +141,13 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
     }
 
     if (view.kind === "theory") {
-      const categoryLevels = levels.filter((l) => l.category === view.category);
       return (
         <CategoryTheory
           category={view.category}
           levels={categoryLevels}
           completedLevels={completedLevels}
-          onPractice={(id) => setView({ kind: "practice", levelId: id })}
-          onBack={() => setView({ kind: "welcome" })}
+          onPractice={(id) => navigate(`/dashboard/level/${id}`)}
+          onBack={() => navigate("/dashboard")}
         />
       );
     }
@@ -166,7 +189,7 @@ export function SandboxPage({ user, token, onLogout }: SandboxPageProps) {
         total={levels.length}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
-        onHome={() => setView({ kind: "welcome" })}
+        onHome={() => navigate("/dashboard")}
         onLogout={onLogout}
         onChangePassword={() => setChangePasswordOpen(true)}
         onResetProgress={handleResetProgress}

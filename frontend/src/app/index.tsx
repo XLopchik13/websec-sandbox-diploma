@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/entities/user/model";
 import { userApi } from "@/entities/user/api";
+import { Router, useRouter } from "@/shared/router";
 import { AuthPage } from "@/pages/AuthPage/AuthPage";
 import { SandboxPage } from "@/pages/SandboxPage/SandboxPage";
+import type { SandboxView } from "@/pages/SandboxPage/SandboxPage";
+import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
 import { ResetPasswordModal } from "@/features/auth/ResetPasswordModal/ResetPasswordModal";
+import { createAppRoutes } from "./routes";
 
 function readUrlTokens() {
   const params = new URLSearchParams(window.location.search);
@@ -20,6 +24,7 @@ const { resetToken: INITIAL_RESET, verifyToken: INITIAL_VERIFY } =
 
 export function App() {
   const { user, token, loading, error, login, register, logout } = useAuth();
+  const { pathname, replaceRoute } = useRouter();
   const [registrationEmail, setRegistrationEmail] = useState<string | null>(
     null,
   );
@@ -36,6 +41,15 @@ export function App() {
       .catch(() => setVerifyStatus("error"));
   }, []);
 
+  useEffect(() => {
+    if (user && token && pathname === "/") {
+      replaceRoute("/dashboard");
+    }
+    if (!user && !token && pathname.startsWith("/dashboard")) {
+      replaceRoute("/");
+    }
+  }, [user, token, pathname, replaceRoute]);
+
   const handleRegister = async (
     email: string,
     username: string,
@@ -48,23 +62,17 @@ export function App() {
 
   if (resetToken) {
     return (
-      <ResetPasswordModal
-        token={resetToken}
-        onDone={() => window.history.replaceState({}, "", "/")}
-      />
+      <ResetPasswordModal token={resetToken} onDone={() => replaceRoute("/")} />
     );
   }
 
-  if (user && token) {
-    return <SandboxPage user={user} token={token} onLogout={logout} />;
-  }
-
+  const homePath = user && token ? "/dashboard" : "/";
   const authError =
     verifyStatus === "error" ? "Ссылка недействительна или устарела" : error;
   const authSuccess =
     verifyStatus === "done" ? "Email подтверждён! Войдите в аккаунт." : null;
 
-  return (
+  const renderAuthPage = () => (
     <AuthPage
       onLogin={login}
       onRegister={handleRegister}
@@ -74,6 +82,23 @@ export function App() {
       registrationEmail={registrationEmail}
       onBackToLogin={() => setRegistrationEmail(null)}
     />
+  );
+
+  const renderDashboardPage = (view: SandboxView) =>
+    user && token ? (
+      <SandboxPage user={user} token={token} onLogout={logout} view={view} />
+    ) : (
+      renderAuthPage()
+    );
+
+  const routes = createAppRoutes({
+    renderAuthPage,
+    renderDashboardPage,
+    homePath,
+  });
+
+  return (
+    <Router routes={routes} fallback={<NotFoundPage homePath={homePath} />} />
   );
 }
 

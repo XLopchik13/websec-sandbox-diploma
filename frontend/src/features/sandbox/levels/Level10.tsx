@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { BrowserWindow } from "@/shared/ui/BrowserWindow/BrowserWindow";
 import { sandboxApi } from "@/entities/sandbox/api";
@@ -29,7 +29,7 @@ export function Level10({ onSuccess }: LevelProps) {
   const [transferLoading, setTransferLoading] = useState(false);
   const token = localStorage.getItem("token")!;
 
-  const loadAccount = async () => {
+  const loadAccount = useCallback(async () => {
     const data = await sandboxApi.csrfGetAccount(token);
     setBalance(data.balance);
     if (data.last_transfer_to) {
@@ -38,11 +38,11 @@ export function Level10({ onSuccess }: LevelProps) {
         amount: data.last_transfer_amount ?? 0,
       });
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     loadAccount().catch(console.error);
-  }, [token]);
+  }, [loadAccount]);
 
   const handleCsrfAttack = async () => {
     setAttacking(true);
