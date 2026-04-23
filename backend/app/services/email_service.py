@@ -20,7 +20,7 @@ async def _send(to: str, subject: str, html: str) -> None:
 
 
 async def send_verification_email(to: str, token: str) -> None:
-    link = f"{settings.app_url}?verify-token={token}"
+    link = f"{settings.app_url}/verify?token={token}"
     print(f"\n[DEV] Verification link for {to}:\n  {link}\n")
     html = f"""
     <p>Подтвердите адрес электронной почты, перейдя по ссылке:</p>

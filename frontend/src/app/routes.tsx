@@ -2,9 +2,10 @@ import type { ReactNode } from "react";
 import type { RouteConfig } from "@/shared/router/Router";
 import type { SandboxView } from "@/pages/SandboxPage/SandboxPage";
 import { NotFoundPage } from "@/pages/NotFoundPage/NotFoundPage";
+import { VerifyEmailPage } from "@/pages/VerifyEmailPage/VerifyEmailPage";
 
 interface CreateAppRoutesArgs {
-  renderAuthPage: () => ReactNode;
+  renderAuthPage: (defaultView?: "login" | "register") => ReactNode;
   renderDashboardPage: (view: SandboxView) => ReactNode;
   homePath: string;
 }
@@ -16,6 +17,9 @@ export function createAppRoutes({
 }: CreateAppRoutesArgs): RouteConfig[] {
   return [
     { path: "/", component: () => renderAuthPage() },
+    { path: "/login", component: () => renderAuthPage("login") },
+    { path: "/register", component: () => renderAuthPage("register") },
+    { path: "/verify", component: () => <VerifyEmailPage /> },
     {
       path: "/dashboard",
       component: () => renderDashboardPage({ kind: "welcome" }),
