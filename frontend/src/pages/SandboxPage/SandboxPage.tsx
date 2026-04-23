@@ -214,7 +214,18 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             { "--sidebar-w": sidebarOpen ? "260px" : "0px" } as CSSProperties
           }
         >
-          {renderContent()}
+          <div
+            key={
+              view.kind === "practice"
+                ? `practice-${view.levelId}`
+                : view.kind === "theory"
+                  ? `theory-${view.category}`
+                  : "welcome"
+            }
+            className={styles.viewTransition}
+          >
+            {renderContent()}
+          </div>
         </main>
       </div>
       {changePasswordOpen && (

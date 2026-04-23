@@ -56,6 +56,21 @@
   @include text-label;
 }
 
+.viewTransition {
+  animation: viewIn 0.18s ease both;
+}
+
+@keyframes viewIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .practiceRow {
   display: flex;
   gap: 24px;
