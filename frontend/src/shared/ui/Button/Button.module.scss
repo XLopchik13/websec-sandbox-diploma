@@ -19,8 +19,7 @@
     background: $color-primary-hover;
   }
 
-  &:disabled,
-  &.loading {
+  &:disabled {
     cursor: default;
     pointer-events: none;
     opacity: 0.65;
@@ -70,23 +69,5 @@
       cursor: default;
       opacity: 0.5;
     }
-  }
-}
-
-.spinner {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: spin 0.55s linear infinite;
-  margin-right: 6px;
-  flex-shrink: 0;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }

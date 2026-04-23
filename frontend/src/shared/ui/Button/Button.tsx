@@ -19,10 +19,9 @@ export function Button({
   return (
     <button
       disabled={disabled || loading}
-      className={`${styles.button} ${variantClass || ""} ${loading ? styles.loading : ""} ${className}`.trim()}
+      className={`${styles.button} ${variantClass || ""} ${className}`.trim()}
       {...props}
     >
-      {loading && <span className={styles.spinner} />}
       {children}
     </button>
   );

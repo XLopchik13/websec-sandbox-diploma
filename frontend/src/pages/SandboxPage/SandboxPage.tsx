@@ -43,7 +43,6 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [successLevelId, setSuccessLevelId] = useState<string | null>(null);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
-  const [levelResetLoading, setLevelResetLoading] = useState(false);
   const [progressResetLoading, setProgressResetLoading] = useState(false);
 
   useEffect(() => {
@@ -73,21 +72,19 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
   };
 
   const handleLevelReset = async (id: string) => {
-    setLevelResetLoading(true);
     try {
       const resetApi = LEVEL_RESET_APIS[id];
       if (resetApi) await resetApi(token);
     } catch (err) {
       console.error("Failed to reset level backend state", err);
     }
-    setResetKey((k) => k + 1);
     try {
       await sandboxApi.uncompleteLevel(token, id);
       setCompletedLevels((prev) => prev.filter((l) => l !== id));
     } catch (err) {
       console.error("Failed to uncomplete level", err);
     } finally {
-      setLevelResetLoading(false);
+      setResetKey((k) => k + 1);
     }
   };
 
@@ -181,7 +178,6 @@ export function SandboxPage({ user, token, onLogout, view }: SandboxPageProps) {
             <p>{selectedLevel.description}</p>
             <ResetLevelButton
               onClick={() => handleLevelReset(selectedLevel.id)}
-              loading={levelResetLoading}
               className={styles.resetBtn}
             />
           </div>
