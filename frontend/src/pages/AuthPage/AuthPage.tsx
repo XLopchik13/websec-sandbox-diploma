@@ -3,21 +3,8 @@ import { LauncherWindow } from "@/shared/ui/LauncherWindow/LauncherWindow";
 import { LoginForm } from "@/features/auth/LoginForm/LoginForm";
 import { RegisterForm } from "@/features/auth/RegisterForm/RegisterForm";
 import { Button } from "@/shared/ui/Button/Button";
+import { useRouter } from "@/shared/router";
 import styles from "./AuthPage.module.scss";
-
-interface AuthPageProps {
-  onLogin: (email: string, password: string) => void;
-  onRegister: (
-    email: string,
-    username: string,
-    password: string,
-  ) => Promise<boolean>;
-  loading: boolean;
-  error: string | null;
-  success?: string | null;
-  registrationEmail?: string | null;
-  onBackToLogin?: () => void;
-}
 
 const SIDEBAR_ITEMS = [
   {
@@ -82,16 +69,31 @@ function ServicePreview() {
   );
 }
 
+interface AuthPageProps {
+  onLogin: (email: string, password: string) => void;
+  onRegister: (
+    email: string,
+    username: string,
+    password: string,
+  ) => Promise<boolean>;
+  loading: boolean;
+  error: string | null;
+  registrationEmail?: string | null;
+  onBackToLogin?: () => void;
+  defaultView?: "login" | "register";
+}
+
 export function AuthPage({
   onLogin,
   onRegister,
   loading,
   error,
-  success,
   registrationEmail,
   onBackToLogin,
+  defaultView = "login",
 }: AuthPageProps) {
-  const [view, setView] = useState<"login" | "register">("login");
+  const { navigate } = useRouter();
+  const [view, setView] = useState<"login" | "register">(defaultView);
 
   return (
     <div className={styles.page}>
@@ -120,18 +122,23 @@ export function AuthPage({
           <LauncherWindow
             title={view === "login" ? "Вход" : "Регистрация"}
             error={error}
-            success={success}
           >
             {view === "login" ? (
               <LoginForm
                 onSubmit={onLogin}
-                onSwitchToRegister={() => setView("register")}
+                onSwitchToRegister={() => {
+                  setView("register");
+                  navigate("/register");
+                }}
                 disabled={loading}
               />
             ) : (
               <RegisterForm
                 onSubmit={onRegister}
-                onSwitchToLogin={() => setView("login")}
+                onSwitchToLogin={() => {
+                  setView("login");
+                  navigate("/login");
+                }}
                 disabled={loading}
               />
             )}

@@ -19,6 +19,23 @@ auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 @auth_router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db)) -> UserRead:
+    existing = await crud_users.get_user_by_email(db, email=request.email)
+    if existing:
+        if not existing.is_verified:
+            token_obj = await crud_tokens.create_token(db, existing.id, TokenType.verify)
+            try:
+                await email_service.send_verification_email(existing.email, token_obj.token)
+            except Exception as e:
+                print(f"[EMAIL ERROR] {e}")
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="email_not_verified",
+            )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Пользователь с таким email уже зарегистрирован",
+        )
+
     try:
         user_data = UserCreate(
             email=request.email,
@@ -60,11 +77,21 @@ class VerifyEmailRequest(BaseModel):
 @auth_router.post("/verify-email", status_code=status.HTTP_200_OK)
 async def verify_email(request: VerifyEmailRequest, db: AsyncSession = Depends(get_db)):
     token_obj = await crud_tokens.get_token(db, request.token, TokenType.verify)
-    if not token_obj or token_obj.used:
+    if not token_obj:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Недействительная или использованная ссылка",
+            detail="Недействительная ссылка",
         )
+
+    if token_obj.used:
+        user = await crud_users.get_user(db, token_obj.user_id)
+        if user and user.is_verified:
+            return {"message": "Email подтверждён"}
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ссылка уже была использована",
+        )
+
     if token_obj.expires_at < datetime.utcnow():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Срок действия ссылки истёк"
