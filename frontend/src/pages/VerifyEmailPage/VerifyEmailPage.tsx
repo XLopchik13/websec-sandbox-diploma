@@ -5,18 +5,18 @@ import { LauncherWindow } from "@/shared/ui/LauncherWindow/LauncherWindow";
 import { Button } from "@/shared/ui/Button/Button";
 import styles from "./VerifyEmailPage.module.scss";
 
+const TOKEN = new URLSearchParams(window.location.search).get("token");
+
 export function VerifyEmailPage() {
   const { navigate } = useRouter();
-  const [status, setStatus] = useState<"pending" | "done" | "error">("pending");
+  const [status, setStatus] = useState<"pending" | "done" | "error">(
+    TOKEN ? "pending" : "error",
+  );
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    if (!token) {
-      setStatus("error");
-      return;
-    }
+    if (!TOKEN) return;
     userApi
-      .verifyEmail(token)
+      .verifyEmail(TOKEN)
       .then(() => setStatus("done"))
       .catch(() => setStatus("error"));
   }, []);
