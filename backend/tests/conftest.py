@@ -93,8 +93,6 @@ def auth_headers(auth_token):
 
 @pytest.fixture
 async def idor_profiles_seeded(db):
-    """IDOR uses Postgres-only TRUNCATE in its production seeder.
-    For SQLite tests we insert seed rows directly."""
     from app.crud.idor import _SEED
 
     db.add_all(

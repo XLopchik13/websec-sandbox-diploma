@@ -1,9 +1,3 @@
-"""Каждый тест подтверждает наличие задуманной уязвимости в уровне.
-
-Это не тесты «защищённости» — намеренно. Уровни уязвимы по дизайну,
-и тесты фиксируют, что эксплуатация действительно срабатывает.
-"""
-
 import base64
 import hashlib
 import json
@@ -121,7 +115,6 @@ async def test_misconfig_default_admin_credentials_work(client, auth_headers):
 
 
 async def test_cryptographic_failures_md5_admin_password_cracked(client, auth_headers):
-    """Хеш админа лежит в БД как MD5 без соли — соответствует md5('password')."""
     expected = hashlib.md5(b"password").hexdigest()  # noqa: S324  intentional weak crypto
 
     users = await client.get("/sandbox/levels/8/users", headers=auth_headers)
