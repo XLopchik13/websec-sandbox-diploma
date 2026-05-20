@@ -10,7 +10,6 @@ async def get_completed_levels(db: AsyncSession, user_id: int) -> list[str]:
 
 
 async def complete_level(db: AsyncSession, user_id: int, level_id: str) -> bool:
-    """Returns False if already completed, True if newly completed."""
     result = await db.execute(
         select(UserProgress).where(
             UserProgress.user_id == user_id,

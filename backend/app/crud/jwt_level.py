@@ -18,7 +18,6 @@ def _b64decode(s: str) -> bytes:
 
 
 def verify_vulnerable_token(token: str) -> dict:
-    """Intentionally vulnerable: accepts alg:none without signature verification."""
     parts = token.split(".")
     if len(parts) != 3:
         raise ValueError("Invalid JWT format")

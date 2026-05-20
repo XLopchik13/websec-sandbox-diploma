@@ -32,7 +32,7 @@ jobs:
           cd backend
           python -m venv .venv
           source .venv/bin/activate
-          pip install -e .
+          pip install -e ".[test]"
           pip install ruff mypy
 
       - name: Backend lint
@@ -42,6 +42,13 @@ jobs:
           source .venv/bin/activate
           ruff check .
           mypy app
+
+      - name: Backend tests
+        if: steps.changes.outputs.backend == 'true'
+        run: |
+          cd backend
+          source .venv/bin/activate
+          pytest -q
 
   frontend:
     runs-on: ubuntu-latest
