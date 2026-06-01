@@ -20,13 +20,13 @@ async def get_user_by_id(db: AsyncSession, user_id: int):
     return user
 
 
-async def create_new_user(db: AsyncSession, user_data: UserCreate):
+async def create_new_user(db: AsyncSession, user_data: UserCreate, is_verified: bool = False):
     existing_user = await crud_users.get_user_by_email(db, email=user_data.email)
     if existing_user:
         raise UserAlreadyExistsError(f"User with email {user_data.email} already exists")
 
     hashed_password = get_password_hash(user_data.password)
-    return await crud_users.create_user(db, user_data, hashed_password)
+    return await crud_users.create_user(db, user_data, hashed_password, is_verified=is_verified)
 
 
 async def update_user_profile(db: AsyncSession, user_id: int, user_data: UserUpdate):

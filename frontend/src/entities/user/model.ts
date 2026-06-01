@@ -2,6 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { userApi } from "./api";
 import type { User } from "./types";
 
+interface RegisterResult {
+  success: boolean;
+  needsVerification: boolean;
+}
+
 export function useAuth() {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token"),
@@ -58,18 +63,18 @@ export function useAuth() {
     email: string,
     username: string,
     password: string,
-  ) => {
+  ): Promise<RegisterResult> => {
     setError(null);
     setLoading(true);
     try {
-      await userApi.register(email, username, password);
-      return true;
+      const created = await userApi.register(email, username, password);
+      return { success: true, needsVerification: !created.is_verified };
     } catch (err) {
       if (err instanceof Error && err.message === "email_not_verified") {
-        return true;
+        return { success: true, needsVerification: true };
       }
       setError(err instanceof Error ? err.message : "Registration failed");
-      return false;
+      return { success: false, needsVerification: false };
     } finally {
       setLoading(false);
     }

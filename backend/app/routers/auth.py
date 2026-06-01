@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import Token, create_access_token
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import get_password_hash, verify_password
 from app.crud import email_tokens as crud_tokens
@@ -19,9 +20,11 @@ auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 @auth_router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db)) -> UserRead:
+    verification_enabled = settings.email_verification_enabled
+
     existing = await crud_users.get_user_by_email(db, email=request.email)
     if existing:
-        if not existing.is_verified:
+        if verification_enabled and not existing.is_verified:
             token_obj = await crud_tokens.create_token(db, existing.id, TokenType.verify)
             try:
                 await email_service.send_verification_email(existing.email, token_obj.token)
@@ -42,12 +45,15 @@ async def register(request: RegisterRequest, db: AsyncSession = Depends(get_db))
             username=request.username,
             password=request.password,
         )
-        user = await user_service.create_new_user(db=db, user_data=user_data)
-        token_obj = await crud_tokens.create_token(db, user.id, TokenType.verify)
-        try:
-            await email_service.send_verification_email(user.email, token_obj.token)
-        except Exception as e:
-            print(f"[EMAIL ERROR] {e}")
+        user = await user_service.create_new_user(
+            db=db, user_data=user_data, is_verified=not verification_enabled
+        )
+        if verification_enabled:
+            token_obj = await crud_tokens.create_token(db, user.id, TokenType.verify)
+            try:
+                await email_service.send_verification_email(user.email, token_obj.token)
+            except Exception as e:
+                print(f"[EMAIL ERROR] {e}")
         return user
     except user_service.UserAlreadyExistsError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -61,7 +67,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)) -> To
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Неверный email или пароль",
         )
-    if not user.is_verified:
+    if settings.email_verification_enabled and not user.is_verified:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Email не подтверждён. Проверьте почту.",

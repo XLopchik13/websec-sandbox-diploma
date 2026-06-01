@@ -20,6 +20,7 @@ services:
       DATABASE_URL: postgresql+asyncpg://websec:${POSTGRES_PASSWORD}@postgres:5432/websec_sandbox
       JWT_SECRET: ${JWT_SECRET}
       RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-onboarding@resend.dev}
       APP_URL: ${APP_URL}
     depends_on:
       postgres:
