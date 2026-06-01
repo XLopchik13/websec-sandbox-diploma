@@ -20,12 +20,17 @@ async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[U
     return list(result.scalars().all())
 
 
-async def create_user(db: AsyncSession, user: UserCreate, hashed_password: str) -> User:
+async def create_user(
+    db: AsyncSession,
+    user: UserCreate,
+    hashed_password: str,
+    is_verified: bool = False,
+) -> User:
     db_user = User(
         email=user.email,
         username=user.username,
         password_hash=hashed_password,
-        is_verified=False,
+        is_verified=is_verified,
     )
     db.add(db_user)
     await db.commit()
