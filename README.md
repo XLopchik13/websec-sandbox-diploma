@@ -1,86 +1,105 @@
 # Collection of vulnerable applications
 
+Образовательная платформа, демонстрирующая веб-уязвимости (XSS, SQL Injection, IDOR,
+Broken Auth, JWT и другие) на намеренно уязвимых «песочницах».
+
+## Хостинг
+
+> Демо доступно по **[адресу](http://89.110.91.79:8080/dashboard)**
+
+Деплой автоматический: пуш в `main` собирает образы и публикует их в GHCR, после чего
+GitHub Actions ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)) по SSH
+обновляет контейнеры на сервере через [docker-compose.deploy.yml](docker-compose.deploy.yml).
+
+## Запуск через Docker (быстрый старт)
+
+Поднимает PostgreSQL, backend и frontend одной командой. Фронтенд будет на
+<http://localhost:8080>, API — на <http://localhost:8000>.
+
+```bash
+copy .env.example .env   # при необходимости отредактируйте значения
+docker compose up --build
+```
+
+Миграции применятся автоматически при старте backend-контейнера.
+
+## Запуск локально (без Docker)
+
 ### Требования
+
 - Python 3.12+
-- Node.js 18+
-- PostgreSQL
+- Node.js 20+
+- PostgreSQL 16+
 
-## Установка зависимостей
+### 1. Backend
 
-### Backend (Python)
-
-1. Создайте виртуальное окружение:
-```powershell
+```bash
 cd backend
 python -m venv .venv
-```
-
-2. Активируйте виртуальное окружение:
-```powershell
 .venv\Scripts\Activate.ps1
-```
-
-3. Установите зависимости:
-```powershell
 pip install -e .
 ```
 
-### Frontend (Node.js)
+Создайте файл `backend\.env`:
 
-1. Перейдите в папку frontend:
-```powershell
-cd frontend
-```
-
-2. Установите зависимости:
-```powershell
-npm install
-```
-
-## Настройка переменных окружения
-
-Перед запуском проекта необходимо настроить переменные окружения для backend.
-
-1. Создайте файл `.env` в папке `backend`:
-
-2. Добавьте следующие переменные в файл `.env`:
 ```env
 DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/dbname
 JWT_SECRET=your-secret-key-here
 ```
 
-Где:
-- `DATABASE_URL` - строка подключения к PostgreSQL базе данных (формат: `postgresql+asyncpg://user:password@host:port/dbname`)
-- `JWT_SECRET` - секретный ключ для подписи JWT токенов (рекомендуется использовать длинную случайную строку)
+Переменные:
 
-## Настройка базы данных
+- `DATABASE_URL` — строка подключения к PostgreSQL (`postgresql+asyncpg://user:password@host:port/dbname`)
+- `JWT_SECRET` — секретный ключ для подписи JWT
+- `RESEND_API_KEY` — **опционально**. Если пусто, подтверждение почты отключено:
+  регистрация сразу активирует аккаунт, вход работает без письма. См. раздел «Почта».
+- `APP_URL` — базовый URL фронтенда для ссылок в письмах (по умолчанию `http://localhost:5173`)
 
-### Создание базы данных
+### 2. Frontend
 
-```sql
-CREATE DATABASE websec_sandbox;
+```bash
+cd frontend
+npm install
 ```
 
-### Выполнение миграций (из корня)
+### 3. База данных и миграции
 
-```powershell
-python s m
+Создайте базу (`CREATE DATABASE dbname;`), затем из корня проекта:
+
+```bash
+python s m      # применить миграции
+python s r      # откатить миграции
 ```
 
-### Откат миграций
+### 4. Запуск серверов
 
-```powershell
-python s r
+Из корня проекта:
+
+```bash
+python s b      # backend → http://127.0.0.1:8000
+python s f      # frontend → http://localhost:5173
 ```
 
-## Запуск проекта (из корня)
+`python s --help` — список всех команд.
 
-После установки всех зависимостей вы можете запускать серверы с помощью удобного скрипта:
+## Почта (Resend) — опционально
 
-```powershell
-# Запуск backend
-python s b
+Подтверждение email и сброс пароля работают через [Resend](https://resend.com).
+Параметр **необязательный**:
 
-# Запуск frontend
-python s f
+- **`RESEND_API_KEY` не задан** → письма не отправляются, подтверждение почты
+  отключено. Регистрация сразу создаёт активированный аккаунт. Удобно для локальной
+  разработки и демонстрации.
+- **`RESEND_API_KEY` задан** → при регистрации отправляется письмо со ссылкой
+  подтверждения, вход до подтверждения заблокирован.
+
+Чтобы письма доходили до **любых** адресатов (а не только до владельца аккаунта Resend),
+нужно верифицировать собственный домен в Resend и указать отправителя на этом домене:
+
+```env
+RESEND_API_KEY=re_...
+EMAIL_FROM=noreply@your-verified-domain.com
 ```
+
+Адрес по умолчанию `onboarding@resend.dev` — это общий sandbox-отправитель Resend,
+который доставляет письма только на email, привязанный к вашему аккаунту Resend.
