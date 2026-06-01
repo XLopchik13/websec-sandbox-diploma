@@ -40,14 +40,13 @@ python -m venv .venv
 pip install -e .
 ```
 
-Создайте файл `backend\.env`:
+Создайте `.env` **в корне проекта** (один файл и для локального запуска, и для Docker):
 
-```env
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/dbname
-JWT_SECRET=your-secret-key-here
+```bash
+copy .env.example .env
 ```
 
-Переменные:
+Минимально нужно заполнить `DATABASE_URL` и `JWT_SECRET`. Переменные:
 
 - `DATABASE_URL` — строка подключения к PostgreSQL (`postgresql+asyncpg://user:password@host:port/dbname`)
 - `JWT_SECRET` — секретный ключ для подписи JWT
