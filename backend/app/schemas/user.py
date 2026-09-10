@@ -20,6 +20,7 @@ class UserUpdate(BaseModel):
 
 class UserRead(UserBase):
     id: int
+    is_verified: bool
     created_at: datetime
 
     model_config = {"from_attributes": True}

@@ -43,9 +43,15 @@ export function App() {
     username: string,
     password: string,
   ) => {
-    const success = await register(email, username, password);
-    if (success) setRegistrationEmail(email);
-    return success;
+    const result = await register(email, username, password);
+    if (result.success) {
+      if (result.needsVerification) {
+        setRegistrationEmail(email);
+      } else {
+        await login(email, password);
+      }
+    }
+    return result.success;
   };
 
   if (resetToken) {

@@ -6,7 +6,7 @@ export const userApi = {
     apiClient.post<LoginResponse>("/auth/login", { email, password }),
 
   register: (email: string, username: string, password: string) =>
-    apiClient.post<void>("/auth/register", { email, username, password }),
+    apiClient.post<User>("/auth/register", { email, username, password }),
 
   getProfile: (token: string) =>
     apiClient.get<User>("/users/me", {
